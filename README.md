@@ -1,1 +1,4 @@
 # TJFramework
+
+实现AssetBundle的打包功能
+实现AssetBundle的资源管理器
