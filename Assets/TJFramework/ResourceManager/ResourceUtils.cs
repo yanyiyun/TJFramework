@@ -5,34 +5,27 @@ using UnityEngine;
 
 namespace TJ
 {
-    class ResourceUtils
+    //TODO: 非编辑器模式还没测试过
+    public class ResourceUtils
     {
         /// <summary>
         /// 热更新目录名
         /// </summary>
-        public static string HotUpdateFolder { get { return "hotupdate"; } }
+        public const string HotUpdateFolder = "hotupdate";
         public static string HotUpdatePath { get { return Path.Combine(Application.persistentDataPath, HotUpdateFolder); } }
 
-        public static string AssetBundleFolder { get { return "assetbundles"; } }
-        public static string AssetBundleFileList { get { return "assetlist.txt"; } }
+        public const string AssetBundleFolder = "assetbundles";
+        public const string AssetBundleFileList = "assetlist.txt";
 
         public static byte[] LoadBytes(string path)
         {
-            if (Application.isEditor)   //TODO:后续增加对模拟状态的处理
-            {
-                //编辑器模式不搜索外部目录
-                return LoadFromStreamingAssets(path);
-            }
-            else
-            {
-                //外部热更新目录
-                string pdpath = Path.Combine(HotUpdatePath, path);
-                if (File.Exists(pdpath))
-                    return ReadAllBytes(pdpath);
+            //外部热更新目录
+            string pdpath = Path.Combine(HotUpdatePath, path);
+            if (File.Exists(pdpath))
+                return ReadAllBytes(pdpath);
 
-                //streamingAssetsPath目录
-                return LoadFromStreamingAssets(path);
-            }
+            //streamingAssetsPath目录
+            return LoadFromStreamingAssets(path);
         }
 
         public static bool FileExists(string path)
@@ -44,24 +37,16 @@ namespace TJ
         public static bool FileExists(string path, out bool inApp)
         {
             inApp = true;
-            if (Application.isEditor)
+            //外部热更新目录
+            string pdpath = Path.Combine(HotUpdatePath, path);
+            if (File.Exists(pdpath))
             {
-                //编辑器模式不搜索外部目录
-                return IsStreamingAssetsExists(path);
+                inApp = false;
+                return true;
             }
-            else
-            {
-                //外部热更新目录
-                string pdpath = Path.Combine(HotUpdatePath, path);
-                if (File.Exists(pdpath))
-                {
-                    inApp = false;
-                    return true;
-                }
 
-                //streamingAssetsPath目录
-                return IsStreamingAssetsExists(path);
-            }
+            //streamingAssetsPath目录
+            return IsStreamingAssetsExists(path);
         }
 
         public static string FullPathForAssetBundleApi(string path)
@@ -80,27 +65,17 @@ namespace TJ
         public static string FullPathForAssetBundleApi(string path, out bool inApp)
         {
             inApp = true;
-            if (Application.isEditor)
+            string pdpath = Path.Combine(HotUpdatePath, path);
+            if (File.Exists(pdpath))
             {
-                if (!IsStreamingAssetsExists(path))
-                    return "";
-                else
-                    return Path.Combine(Application.streamingAssetsPath, path);
+                inApp = false;
+                return pdpath;
             }
-            else
-            {
-                string pdpath = Path.Combine(HotUpdatePath, path);
-                if (File.Exists(pdpath))
-                {
-                    inApp = false;
-                    return pdpath;
-                }
 
-                if (!IsStreamingAssetsExists(path))
-                    return "";
-                else
-                    return Path.Combine(Application.streamingAssetsPath, path);
-            }
+            if (!IsStreamingAssetsExists(path))
+                return "";
+            else
+                return Path.Combine(Application.streamingAssetsPath, path);
         }
 
         //TODO: 返回一个适合www格式的路径 FullPathForWWWApi
@@ -180,5 +155,7 @@ namespace TJ
                 .ToLower();
             return bn;
         }
+
+
     }
 }

@@ -12,13 +12,13 @@ namespace TJ
 
     public class AssetBundleBuilder
     {
-        public string ruleFilePath;
+        AssetBundlePathResolver pathResolver;
+        readonly string ruleFilePath;
 
-        protected AssetBundlePathResolver pathResolver;
-
-        public AssetBundleBuilder(AssetBundlePathResolver resolver)
+        public AssetBundleBuilder(AssetBundlePathResolver resolver, string ruleFilePath)
         {
             this.pathResolver = resolver;
+            this.ruleFilePath = ruleFilePath;
             this.InitDirs();
             AssetBundleUtils.pathResolver = pathResolver;
         }
@@ -252,17 +252,6 @@ namespace TJ
 
         }
 
-
-        [MenuItem("TJ/Builde AssetBundles")]
-        static void BuildAssetBundles()
-        {
-            AssetBundleBuilder builder = new AssetBundleBuilder(new AssetBundlePathResolver());
-            builder.ruleFilePath = "Assets/TJFramework/AssetBundleBuilder/BuildRuleTemplate.json"; //TODO: 这个地址需要写入配置
-            builder.Begin();
-            builder.ParseRule();
-            builder.Export();
-            builder.End();
-        }
 
     }
 

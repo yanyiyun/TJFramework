@@ -60,7 +60,8 @@ public class Test : MonoBehaviour {
         Debug.Log(Application.persistentDataPath);
         Debug.Log(Application.streamingAssetsPath);
 
-        TJ.BundleManager.CreateInstance<TJ.AssetBundleManager>();
+        TJ.BundleManager.Create();
+        //TJ.BundleManager.CreateInstance<TJ.AssetBundleManager>();
         //TJ.BundleManager.CreateInstance<TJ.SimulateBundleManager>();
         var mgr = TJ.BundleManager.Instance;
 
