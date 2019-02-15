@@ -119,7 +119,7 @@ public class Test : MonoBehaviour {
 
         //mgr.AssetExists("Assets/StreamingAssets/assetbundles/assets/tjframework/test/cube.prefab.ab");
 
-        TJ.LuaManager.Instance.Test();
+        TJ.LuaManager.Instance.DoString(@"require('test')");
 
     }
 

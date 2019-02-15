@@ -1,0 +1,1 @@
+print("test Lua call extern")
