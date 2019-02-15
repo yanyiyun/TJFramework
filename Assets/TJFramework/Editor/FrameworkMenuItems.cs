@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System.IO;
+using System.Collections.Generic;
 
 namespace TJ
 {
@@ -13,6 +15,76 @@ namespace TJ
             builder.ParseRule();
             builder.Export();
             builder.End();
+        }
+
+        [MenuItem("TJ/Sync Lua Files")]
+        static void SyncLuaFiles()
+        {
+            //是否强行复制. 不考虑修改日期
+            const bool FORCE_COPY = false;
+
+            List<string> luafiles = new List<string>();
+            HashSet<string> luafileset = new HashSet<string>();
+
+            {
+                //收集文件
+                DirectoryInfo rootdi = new DirectoryInfo(Config.LuaScriptExternDirectory);
+                int rootpathLength = rootdi.FullName.Length + 1;
+                FileInfo[] allfile = rootdi.GetFiles("*.lua", SearchOption.AllDirectories);
+                foreach (FileInfo fi in allfile)
+                {
+                    string fn = fi.FullName.Replace('\\', '/').Substring(rootpathLength);
+                    luafiles.Add(fn);
+                    luafileset.Add(fn);
+                }
+            }
+
+            {
+                //复制修改日期比较新的文件
+                foreach (var fn in luafiles)
+                {
+                    string srcfn = Path.Combine(Config.LuaScriptExternDirectory, fn);
+                    string dstfn = Path.Combine(Config.LuaScriptDirectory, fn + ".bytes");
+                    FileInfo src = new FileInfo(srcfn);
+                    FileInfo dst = null;
+                    if (File.Exists(dstfn))
+                        dst = new FileInfo(dstfn);
+
+                    if (FORCE_COPY || dst == null || src.LastWriteTime > dst.LastWriteTime)
+                    {
+                        Debug.Log("Copy file: " + fn);
+                        File.Copy(srcfn, dstfn, true);
+                    }
+                }
+            }
+
+            {
+                //删除多余的文件
+                DirectoryInfo rootdi = new DirectoryInfo(Config.LuaScriptDirectory);
+                int rootpathLength = rootdi.FullName.Length + 1;
+                FileInfo[] allfile = rootdi.GetFiles("*", SearchOption.AllDirectories);
+                foreach (FileInfo fi in allfile)
+                {
+                    string fn = fi.FullName.Replace('\\', '/').Substring(rootpathLength);
+                    string ffn = fn;
+                    if (fn.EndsWith(".lua.bytes"))
+                        ffn = fn.Substring(0, fn.Length - ".bytes".Length);
+                    else if (fn.EndsWith(".lua.bytes.meta"))
+                        ffn = fn.Substring(0, fn.Length - ".bytes.meta".Length);
+                    if (!luafileset.Contains(ffn))
+                    {
+                        Debug.Log("Delete file: " + fn);
+                        fi.Delete();
+                    }
+                }
+            }
+
+            //删除空目录
+            AssetBundleUtils.KillEmptyDirectory(Config.LuaScriptDirectory);
+            //刷新资源
+            AssetDatabase.Refresh();
+
+            Debug.Log("Sync Lua Files complete!");
         }
 
 
