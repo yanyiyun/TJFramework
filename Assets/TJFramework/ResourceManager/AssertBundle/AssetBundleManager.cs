@@ -23,7 +23,8 @@ namespace TJ
 
         Dictionary<string, AssetBundleLoader> loaders = new Dictionary<string, AssetBundleLoader>();
 
-        protected override void Init()
+
+        void Awake()
         {
             Reset();
         }
@@ -108,6 +109,12 @@ namespace TJ
         public string FilePath(string path)
         {
             return Path.Combine(ResourceUtils.AssetBundleFolder, path);
+        }
+
+        public override bool AssetExists(string assetName)
+        {
+            assetName = assetName.ToLower();
+            return assets.ContainsKey(assetName);
         }
 
         public string GetBundleNameFromAssetList(string assetName)

@@ -117,6 +117,10 @@ public class Test : MonoBehaviour {
         //obj = oo as Object;
         //Debug.Log(!obj);
 
+        //mgr.AssetExists("Assets/StreamingAssets/assetbundles/assets/tjframework/test/cube.prefab.ab");
+
+        TJ.LuaManager.Instance.Test();
+
     }
 
 

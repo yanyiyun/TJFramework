@@ -8,7 +8,7 @@ using System;
 /// </summary>
 namespace TJ
 {
-    public class Singleton<T> : MonoBehaviour where T : Singleton<T>
+    public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         // Check to see if we're about to be destroyed.
         private static bool m_ShuttingDown = false;
@@ -43,8 +43,6 @@ namespace TJ
 
                         // Make instance persistent.
                         DontDestroyOnLoad(singletonObject);
-
-                        m_Instance.Init();
                     }
                 }
 
@@ -52,11 +50,6 @@ namespace TJ
             }
         }
 
-
-        protected virtual void Init()
-        {
-
-        }
 
 
         private void OnApplicationQuit()
@@ -72,7 +65,7 @@ namespace TJ
     }
 
 
-    public class SingletonC<T> : MonoBehaviour where T : SingletonC<T>
+    public class SingletonC<T> : MonoBehaviour where T : MonoBehaviour
     {
         // Check to see if we're about to be destroyed.
         private static bool m_ShuttingDown = false;
@@ -113,19 +106,12 @@ namespace TJ
 
                     // Make instance persistent.
                     DontDestroyOnLoad(singletonObject);
-
-                    m_Instance.Init();
                 }
             }
 
             return m_Instance;
         }
 
-
-        protected virtual void Init()
-        {
-
-        }
 
 
         private void OnApplicationQuit()

@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -20,6 +21,14 @@ namespace TJ
         public override void Reset()
         {
             Clear();
+        }
+
+        public override bool AssetExists(string assetName)
+        {
+            //assetName = assetName.ToLower();
+            //Type t = AssetDatabase.GetMainAssetTypeAtPath(assetName);
+            //return t != null;
+            return File.Exists(assetName);
         }
 
         public override Asset LoadAsset(string assetName)

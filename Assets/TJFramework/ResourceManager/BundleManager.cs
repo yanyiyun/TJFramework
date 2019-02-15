@@ -3,10 +3,15 @@
 
 namespace TJ
 {
+    /// <summary>
+    /// assetName的路径必须以/分隔
+    /// bundleName必须全部小写, 且以/分隔
+    /// </summary>
     public abstract class BundleManager : SingletonC<BundleManager>
     {
         public abstract void Clear();
         public abstract void Reset();
+        public abstract bool AssetExists(string assetName);
         public abstract Asset LoadAsset(string assetName);
         public abstract Asset LoadAsset(string assetName, Type type);
         public abstract AssetLoadRequest LoadAssetAsync(string assetName);
