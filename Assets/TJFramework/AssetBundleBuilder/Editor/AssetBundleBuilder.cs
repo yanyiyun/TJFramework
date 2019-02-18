@@ -186,8 +186,17 @@ namespace TJ
             FileInfo[] allfile = rootdi.GetFiles("*", SearchOption.AllDirectories);
             foreach (FileInfo fi in allfile)
             {
+                //不移除目录的meta
+                if (fi.FullName.EndsWith(".meta") && Directory.Exists(fi.FullName.Substring(0, fi.FullName.Length - 5)))
+                {
+                    continue;
+                }
+
                 string fn = fi.FullName.Replace('\\', '/').Substring(rootpathLength);
-                if (!needfiles.Contains(fn))
+                string ffn = fn;
+                if (fn.EndsWith(".meta"))
+                    ffn = fn.Substring(0, fn.Length - ".meta".Length);
+                if (!needfiles.Contains(ffn))
                 {
                     Debug.Log("Delete unused file: " + fn);
                     fi.Delete();
@@ -196,7 +205,7 @@ namespace TJ
 
 
             //删除空目录
-            AssetBundleUtils.KillEmptyDirectory(pathResolver.BundleSavePath);
+            AssetBundleUtils.KillEmptyDirectoryWithMeta(pathResolver.BundleSavePath);
         }
 
 

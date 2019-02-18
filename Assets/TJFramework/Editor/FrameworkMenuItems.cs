@@ -65,6 +65,12 @@ namespace TJ
                 FileInfo[] allfile = rootdi.GetFiles("*", SearchOption.AllDirectories);
                 foreach (FileInfo fi in allfile)
                 {
+                    //不移除目录的meta
+                    if (fi.FullName.EndsWith(".meta") && Directory.Exists(fi.FullName.Substring(0, fi.FullName.Length - 5)))
+                    {
+                        continue;
+                    }
+
                     string fn = fi.FullName.Replace('\\', '/').Substring(rootpathLength);
                     string ffn = fn;
                     if (fn.EndsWith(".lua.bytes"))
@@ -80,7 +86,7 @@ namespace TJ
             }
 
             //删除空目录
-            AssetBundleUtils.KillEmptyDirectory(Config.LuaScriptDirectory);
+            AssetBundleUtils.KillEmptyDirectoryWithMeta(Config.LuaScriptDirectory);
             //刷新资源
             AssetDatabase.Refresh();
 

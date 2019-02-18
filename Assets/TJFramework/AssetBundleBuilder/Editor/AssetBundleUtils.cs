@@ -135,8 +135,9 @@ namespace TJ
 
         public static List<AssetBundleBuildRuleData.Rule> GetDummyRules() { return _dummyRules; }
 
-        public static void KillEmptyDirectory(String storagepath)
+        public static void KillEmptyDirectoryWithMeta(String storagepath)
         {
+            bool isdel = false;
             DirectoryInfo dir = new DirectoryInfo(storagepath);
             DirectoryInfo[] subdirs = dir.GetDirectories("*.*", SearchOption.AllDirectories);
             foreach (DirectoryInfo subdir in subdirs)
@@ -144,9 +145,16 @@ namespace TJ
                 FileSystemInfo[] subFiles = subdir.GetFileSystemInfos();
                 if (subFiles.Length == 0)
                 {
+                    isdel = true;
+                    string metapath = subdir.FullName + ".meta";
                     subdir.Delete();
+                    if (File.Exists(metapath))
+                        File.Delete(metapath);
                 }
             }
+
+            if (isdel)
+                KillEmptyDirectoryWithMeta(storagepath);
         }
     }
 }
