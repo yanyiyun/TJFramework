@@ -150,7 +150,7 @@ namespace TJ
                 if (File.Exists(path))
                 {
                     filepath = path;
-                    return ResourceUtils.ReadAllBytes(path);
+                    return File.ReadAllBytes(path);
                 }
             }
             return null;

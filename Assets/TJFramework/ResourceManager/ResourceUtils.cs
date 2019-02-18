@@ -22,7 +22,7 @@ namespace TJ
             //外部热更新目录
             string pdpath = Path.Combine(HotUpdatePath, path);
             if (File.Exists(pdpath))
-                return ReadAllBytes(pdpath);
+                return File.ReadAllBytes(pdpath);
 
             //streamingAssetsPath目录
             return LoadFromStreamingAssets(path);
@@ -114,7 +114,7 @@ namespace TJ
 #endif
 
             var fullPath = Path.Combine(Application.streamingAssetsPath, path);
-            return ReadAllBytes(fullPath);
+            return File.ReadAllBytes(fullPath);
         }
 
         //public static bool IsPersistentDataExists(string path)
@@ -132,20 +132,20 @@ namespace TJ
         //    return ReadAllBytes(fullPath);
         //}
 
-        /// <summary>
-        /// 无视锁文件，直接读bytes
-        /// </summary>
-        /// <param name="resPath"></param>
-        public static byte[] ReadAllBytes(string resPath)
-        {
-            byte[] bytes;
-            using (FileStream fs = File.Open(resPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                bytes = new byte[fs.Length];
-                fs.Read(bytes, 0, (int)fs.Length);
-            }
-            return bytes;
-        }
+        ///// <summary>
+        ///// 无视锁文件，直接读bytes
+        ///// </summary>
+        ///// <param name="resPath"></param>
+        //public static byte[] ReadAllBytes(string resPath)
+        //{
+        //    byte[] bytes;
+        //    using (FileStream fs = File.Open(resPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        //    {
+        //        bytes = new byte[fs.Length];
+        //        fs.Read(bytes, 0, (int)fs.Length);
+        //    }
+        //    return bytes;
+        //}
 
 
         public static string ConvertToABName(string assetPath)
