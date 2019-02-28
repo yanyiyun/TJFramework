@@ -4,64 +4,190 @@ using XLua;
 
 namespace TJ
 {
-    public class LuaBehaviour : MonoBehaviour
+    public class LBehaviour : MonoBehaviour
     {
-        LuaTable luaInst;
+        protected LuaTable luaInst;
 
-        Action<LuaTable> luaStart;
-        Action<LuaTable> luaOnDestroy;
-        Action<LuaTable> luaOnDisable;
-        Action<LuaTable> luaOnEnable;
+        Action<LuaTable> cbStart;
+        Action<LuaTable> cbOnDestroy;
 
 
         public virtual void Bind(LuaTable inst)
         {
             luaInst = inst;
 
-
-            luaInst.Get("Start", out luaStart);
-            luaInst.Get("OnDestroy", out luaOnDestroy);
-            luaInst.Get("OnDisable", out luaOnDisable);
-            luaInst.Get("OnEnable", out luaOnEnable);
+            luaInst.Get("Start", out cbStart);
+            luaInst.Get("OnDestroy", out cbOnDestroy);
         }
 
-
-        protected virtual void Start()
+        protected virtual void Clear()
         {
-            if (luaStart != null)
-            {
-                luaStart(luaInst);
-            }
-        }
-
-        protected virtual void OnDestroy()
-        {
-            if (luaOnDestroy != null)
-            {
-                luaOnDestroy(luaInst);
-            }
-
+            cbStart = null;
+            cbOnDestroy = null;
 
             luaInst = null;
-            luaStart = null;
-            luaOnDestroy = null;
         }
 
-        protected virtual void OnDisable()
+        void Start()
         {
-            if (luaOnDisable != null)
-            {
-                luaOnDisable(luaInst);
-            }
+            if (cbStart != null) cbStart(luaInst);
         }
 
-        protected virtual void OnEnable()
+        void OnDestroy()
         {
-            if (luaOnEnable != null)
-            {
-                luaOnEnable(luaInst);
-            }
+            if (cbOnDestroy != null) cbOnDestroy(luaInst);
+            Clear();
         }
-
     }
+
+
+    public class UpdateLBehaviour : LBehaviour
+    {
+        Action<LuaTable> cbUpdate;
+
+        public override void Bind(LuaTable inst)
+        {
+            base.Bind(inst);
+
+            luaInst.Get("Update", out cbUpdate);
+        }
+
+        protected override void Clear()
+        {
+            cbUpdate = null;
+
+            base.Clear();
+        }
+
+        void Update()
+        {
+            if (cbUpdate != null) cbUpdate(luaInst);
+        }
+    }
+
+
+    public class FixedUpdateLBehaviour : LBehaviour
+    {
+        Action<LuaTable> cbFixedUpdate;
+
+        public override void Bind(LuaTable inst)
+        {
+            base.Bind(inst);
+
+            luaInst.Get("FixedUpdate", out cbFixedUpdate);
+        }
+
+        protected override void Clear()
+        {
+            cbFixedUpdate = null;
+
+            base.Clear();
+        }
+
+        void FixedUpdate()
+        {
+            if (cbFixedUpdate != null) cbFixedUpdate(luaInst);
+        }
+    }
+
+
+    public class LateUpdateLBehaviour : LBehaviour
+    {
+        Action<LuaTable> cbLateUpdate;
+
+        public override void Bind(LuaTable inst)
+        {
+            base.Bind(inst);
+
+            luaInst.Get("LateUpdate", out cbLateUpdate);
+        }
+
+        protected override void Clear()
+        {
+            cbLateUpdate = null;
+
+            base.Clear();
+        }
+
+        void LateUpdate()
+        {
+            if (cbLateUpdate != null) cbLateUpdate(luaInst);
+        }
+    }
+
+
+    public class AllUpdateLBehaviour : LBehaviour
+    {
+        Action<LuaTable> cbUpdate;
+        Action<LuaTable> cbFixedUpdate;
+        Action<LuaTable> cbLateUpdate;
+
+        public override void Bind(LuaTable inst)
+        {
+            base.Bind(inst);
+
+            luaInst.Get("Update", out cbUpdate);
+            luaInst.Get("FixedUpdate", out cbFixedUpdate);
+            luaInst.Get("LateUpdate", out cbLateUpdate);
+        }
+
+        protected override void Clear()
+        {
+            cbUpdate = null;
+            cbFixedUpdate = null;
+            cbLateUpdate = null;
+
+            base.Clear();
+        }
+
+        void Update()
+        {
+            if (cbUpdate != null) cbUpdate(luaInst);
+        }
+
+        void FixedUpdate()
+        {
+            if (cbFixedUpdate != null) cbFixedUpdate(luaInst);
+        }
+
+        void LateUpdate()
+        {
+            if (cbLateUpdate != null) cbLateUpdate(luaInst);
+        }
+    }
+
+
+    public class OnEnableLBehaviour : LBehaviour
+    {
+        Action<LuaTable> cbOnDisable;
+        Action<LuaTable> cbOnEnable;
+
+        public override void Bind(LuaTable inst)
+        {
+            base.Bind(inst);
+
+            luaInst.Get("OnDisable", out cbOnDisable);
+            luaInst.Get("OnEnable", out cbOnEnable);
+        }
+
+        protected override void Clear()
+        {
+            cbOnDisable = null;
+            cbOnEnable = null;
+
+            base.Clear();
+        }
+
+
+        void OnDisable()
+        {
+            if (cbOnDisable != null) cbOnDisable(luaInst);
+        }
+
+        void OnEnable()
+        {
+            if (cbOnEnable != null) cbOnEnable(luaInst);
+        }
+    }
+
 }
