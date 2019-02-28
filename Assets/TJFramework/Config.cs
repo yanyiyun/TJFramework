@@ -8,8 +8,8 @@ namespace TJ
         public const string AssetBundleBuildRulePath = "Assets/TJFramework/AssetBundleBuilder/BuildRuleTemplate.json";
 
         //Lua目录
-        public const string LuaScriptDirectory = "Assets/TJFramework/Test/lua";
+        public const string LuaScriptDirectory = "Assets/TJFramework/Test/Lua";
         //Lua源文件的外部目录
-        public const string LuaScriptExternDirectory = "lua";
+        public const string LuaScriptExternDirectory = "Lua";
     };
 }
