@@ -105,6 +105,7 @@ namespace TJ
             foreach (var sp in searchPaths)
             {
                 var path = Path.Combine(Config.LuaScriptDirectory, Path.Combine(sp, filepath)).Replace('\\', '/');
+                //对于AssetBundle的判定方式, 取决于文件列表是否存在资源, 所以不会出现遍历顺序可能出现错误的问题.
                 if (BundleManager.Instance.AssetExists(path))
                 {
                     Asset asset = BundleManager.Instance.LoadAsset(path);

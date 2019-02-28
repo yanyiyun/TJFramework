@@ -6,7 +6,7 @@ using UnityEngine;
 namespace TJ
 {
     //TODO: 非编辑器模式还没测试过
-    public class ResourceUtils
+    public static class ResourceUtils
     {
         /// <summary>
         /// 热更新目录名
