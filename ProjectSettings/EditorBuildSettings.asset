@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/TJFramework/Test/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/TJFramework/Test/Scene2.unity
+    guid: 071a0a6a1ed09bb45ba180ec9031cc66
   m_configObjects: {}

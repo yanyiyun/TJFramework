@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
+using UnityEngine.SceneManagement;
 
 public class Test : MonoBehaviour {
     delegate void mycall(string str);
@@ -60,7 +59,7 @@ public class Test : MonoBehaviour {
         Debug.Log(Application.persistentDataPath);
         Debug.Log(Application.streamingAssetsPath);
 
-        TJ.BundleManager.Create();
+        //TJ.BundleManager.Create();
         //TJ.BundleManager.CreateInstance<TJ.AssetBundleManager>();
         //TJ.BundleManager.CreateInstance<TJ.SimulateBundleManager>();
         var mgr = TJ.BundleManager.Instance;
@@ -101,7 +100,7 @@ public class Test : MonoBehaviour {
         yield return null;
         System.GC.Collect();
         System.GC.WaitForPendingFinalizers();
-        mgr.UnloadUnusedBundles(true);
+        //mgr.UnloadUnusedBundles(false);
 
 
         yield return null;
@@ -119,7 +118,7 @@ public class Test : MonoBehaviour {
 
         //mgr.AssetExists("Assets/StreamingAssets/assetbundles/assets/tjframework/test/cube.prefab.ab");
 
-        TJ.LuaManager.Instance.DoString(@"require('test')");
+        //TJ.LuaManager.Instance.DoString(@"require('test')");
 
     }
 
@@ -130,7 +129,34 @@ public class Test : MonoBehaviour {
 		
 	}
 
+    void Awake()
+    {
+        Debug.Log("Awake");
+    }
 
+    void OnEnable()
+    {
+        Debug.Log("OnEnable called");
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log("Test Destroy");
+    }
+
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("====================OnSceneLoaded: " + scene.name);
+        Debug.Log(mode);
+    }
+
+    private void OnSceneUnloaded(Scene current)
+    {
+        Debug.Log("====================OnSceneUnloaded: " + current);
+    }
 }
 
 

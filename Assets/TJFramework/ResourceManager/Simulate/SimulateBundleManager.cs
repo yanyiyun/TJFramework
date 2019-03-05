@@ -13,6 +13,11 @@ namespace TJ
     {
         Dictionary<string, SimulateBundle> bundles = new Dictionary<string, SimulateBundle>();
 
+        public override bool CanClear()
+        {
+            return true;
+        }
+
         public override void Clear()
         {
             bundles.Clear();
@@ -29,6 +34,11 @@ namespace TJ
             //Type t = AssetDatabase.GetMainAssetTypeAtPath(assetName);
             //return t != null;
             return File.Exists(assetName);
+        }
+
+        public override string AssetBundleName(string assetName)
+        {
+            return AssetExists(assetName) ? assetName.ToLower() + ".ab" : null;
         }
 
         public override Asset LoadAsset(string assetName)

@@ -33,17 +33,18 @@ namespace TJ
         }
 
 
-        public void DoString(string chunk)
+        public object[] DoString(string chunk)
         {
-            luaenv.DoString(chunk);
+            return luaenv.DoString(chunk);
         }
 
-        public bool DoStringSafe(string chunk)
+        public bool DoStringSafe(string chunk, out object[] rets)
         {
+            rets = null;
             bool err = false;
             try
             {
-                luaenv.DoString(chunk);
+                rets = luaenv.DoString(chunk);
             }
             catch (Exception e)
             {
@@ -56,13 +57,12 @@ namespace TJ
 
         public void Clear()
         {
-            if (luaenv != null)
-            {
-                //在没有清除所有Delegate时, 会抛出异常.
-                luaenv.Dispose();
+            if (luaenv == null)
+                return;
 
-                luaenv = null;
-            }
+            //在没有清除所有Delegate时, 会抛出异常.
+            luaenv.Dispose();
+            luaenv = null;
         }
 
         public void Reset()

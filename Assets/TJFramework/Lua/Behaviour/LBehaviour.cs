@@ -6,6 +6,8 @@ namespace TJ
 {
     public class LBehaviour : MonoBehaviour
     {
+        public string moduleName = "";
+
         protected LuaTable luaInst;
 
         Action<LuaTable> cbStart;
@@ -26,6 +28,47 @@ namespace TJ
             cbOnDestroy = null;
 
             luaInst = null;
+        }
+
+        void Awake()
+        {
+            if (moduleName.Trim().Length != 0)
+            {
+                object[] rets = LuaManager.Instance.DoString(string.Format("return require('{0}')", moduleName));
+                if (rets.Length >= 1)
+                {
+                    LuaTable tluaInst = null;
+                    if (rets[0] is LuaTable)
+                    {
+                        LuaTable cls = rets[0] as LuaTable;
+                        Func<LuaTable> funcNew;
+                        cls.Get("new", out funcNew);
+                        if (funcNew != null)
+                        {
+                            tluaInst = funcNew();
+                            funcNew = null;
+                        }
+                        else
+                        {
+                            tluaInst = cls;
+                        }
+                    }
+                    else if (rets[0] is LuaFunction)
+                    {
+                        LuaFunction func = rets[0] as LuaFunction;
+                        tluaInst = func.Func<LuaTable>();
+                    }
+
+                    if (tluaInst != null)
+                    {
+                        Bind(tluaInst);
+                        tluaInst.Set("comp", this);
+                        Action<LuaTable> cbOnBind;
+                        tluaInst.Get("OnBind", out cbOnBind);
+                        if (cbOnBind != null) cbOnBind(tluaInst);
+                    }
+                }
+            }
         }
 
         void Start()

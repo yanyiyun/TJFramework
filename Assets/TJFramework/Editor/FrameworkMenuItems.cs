@@ -53,6 +53,9 @@ namespace TJ
                     if (FORCE_COPY || dst == null || src.LastWriteTime > dst.LastWriteTime)
                     {
                         Debug.Log("Copy file: " + fn);
+                        var dirname = Path.GetDirectoryName(dstfn);
+                        if (!Directory.Exists(dirname))
+                            Directory.CreateDirectory(dirname);
                         File.Copy(srcfn, dstfn, true);
                     }
                 }

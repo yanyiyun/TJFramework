@@ -29,6 +29,19 @@ namespace TJ
             Reset();
         }
 
+        public override bool CanClear()
+        {
+            foreach (var loader in loaders.Values)
+            {
+                if (loader.state == AssetBundleLoader.State.Loading)
+                    return false;
+
+                if (loader.bundle != null && loader.bundle.IsLoadingAsync)
+                    return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// 清理所有资源. 这应该只在热更新结束后才会调用.
         /// 因为又很多副作用. 
@@ -38,6 +51,9 @@ namespace TJ
         /// </summary>
         public override void Clear()
         {
+            if (manifest == null)
+                return;
+
             manifest = null;
             assets = null;
             bundles = null;
@@ -56,7 +72,7 @@ namespace TJ
                 {
                     if (loader.bundle.IsLoadingAsync)
                         loadingAssets.Add(loader.bundle.BundleName);
-                    loader.bundle.Dispose(true);
+                    loader.bundle.Dispose(false);
                 }
             }
             loaders.Clear();
@@ -113,11 +129,18 @@ namespace TJ
 
         public override bool AssetExists(string assetName)
         {
-            assetName = assetName.ToLower();
-            return assets.ContainsKey(assetName);
+            return AssetBundleName(assetName) != null;
         }
 
-        public string GetBundleNameFromAssetList(string assetName)
+        public override string AssetBundleName(string assetName)
+        {
+            assetName = assetName.ToLower();
+            string bundleName;
+            assets.TryGetValue(assetName, out bundleName);
+            return bundleName;
+        }
+
+        string GetBundleNameFromAssetList(string assetName)
         {
             assetName = assetName.ToLower();
             string bundleName;
