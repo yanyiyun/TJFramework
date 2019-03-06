@@ -10,6 +10,7 @@ namespace TJ
     {
         LuaEnv luaenv;
         List<string> searchPaths = new List<string>() { "" };
+        HashSet<Bundle> luaBundles = new HashSet<Bundle>();
 
         public LuaEnv LuaEnv { get { return luaenv; } }
 
@@ -61,6 +62,12 @@ namespace TJ
                 return;
 
             funcEngineReset = null;
+
+            foreach(var bundle in luaBundles)
+            {
+                bundle.Return(this);
+            }
+            luaBundles.Clear();
 
             //在没有清除所有Delegate时, 会抛出异常.
             luaenv.Dispose();
@@ -115,6 +122,14 @@ namespace TJ
                 if (BundleManager.Instance.AssetExists(path))
                 {
                     Asset asset = BundleManager.Instance.LoadAsset(path);
+                    //
+                    Bundle bundle = asset.Bundle;
+                    if (!luaBundles.Contains(bundle))
+                    {
+                        bundle.Hold(this);
+                        luaBundles.Add(bundle);
+                    }
+                    //
                     TextAsset text = asset.RawAsset as TextAsset;
                     if (text != null)
                     {
