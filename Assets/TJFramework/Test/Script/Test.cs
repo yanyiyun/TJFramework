@@ -124,40 +124,29 @@ public class Test : MonoBehaviour {
 
 
 
-    // Update is called once per frame
-    void Update () {
+ //   // Update is called once per frame
+ //   void Update () {
 		
-	}
+	//}
 
-    void Awake()
-    {
-        Debug.Log("Awake");
-    }
+ //   void Awake()
+ //   {
+ //       Debug.Log("Awake");
+ //   }
 
-    void OnEnable()
-    {
-        Debug.Log("OnEnable called");
-        //SceneManager.sceneLoaded += OnSceneLoaded;
-        SceneManager.sceneUnloaded += OnSceneUnloaded;
-    }
+ //   void OnEnable()
+ //   {
+ //       Debug.Log("OnEnable called");
+ //       //SceneManager.sceneLoaded += OnSceneLoaded;
+ //       //SceneManager.sceneUnloaded += OnSceneUnloaded;
+ //   }
 
-    private void OnDestroy()
-    {
-        Debug.Log("Test Destroy");
-    }
+ //   private void OnDestroy()
+ //   {
+ //       Debug.Log("Test Destroy");
+ //   }
 
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        Debug.Log("====================OnSceneLoaded: " + scene.name);
-        Debug.Log(mode);
-    }
-
-    private void OnSceneUnloaded(Scene current)
-    {
-        Debug.Log("====================OnSceneUnloaded: " + current);
-        SceneManager.sceneUnloaded -= OnSceneUnloaded;
-    }
 }
 
 
