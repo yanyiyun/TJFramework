@@ -59,7 +59,7 @@ namespace TJ
             assetBundle.Unload(unloadAllLoadedObjects);
             assetBundle = null;
 
-            Debug.Log("Unload AssetBundle: " + BundleName);
+            Debug.LogFormat("Unload AssetBundle({0}): {1}", unloadAllLoadedObjects, BundleName);
         }
 
         public override void Hold(Object owner)

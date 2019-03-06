@@ -137,7 +137,7 @@ public class Test : MonoBehaviour {
     void OnEnable()
     {
         Debug.Log("OnEnable called");
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        //SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
@@ -156,6 +156,7 @@ public class Test : MonoBehaviour {
     private void OnSceneUnloaded(Scene current)
     {
         Debug.Log("====================OnSceneUnloaded: " + current);
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 }
 

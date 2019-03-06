@@ -72,7 +72,7 @@ namespace TJ
                 {
                     if (loader.bundle.IsLoadingAsync)
                         loadingAssets.Add(loader.bundle.BundleName);
-                    loader.bundle.Dispose(false);
+                    loader.bundle.Dispose(true);
                 }
             }
             loaders.Clear();
