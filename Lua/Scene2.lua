@@ -16,7 +16,7 @@ function Scene2View:OnBind()
     local btnComp = self.btnScene:GetComponent(typeof(CS.UnityEngine.UI.Button))
     btnComp.onClick:AddListener(function()
         print("change scene")
-        local scenename = "Assets/TJFramework/Test/Scene1.unity";
+        local scenename = "Assets/TJFramework/Test/Scene/Scene1.unity";
         local bname = CS.TJ.BundleManager.Instance:AssetBundleName(scenename)
         CS.TJ.BundleManager.Instance:LoadBundle(bname);
         CS.UnityEngine.SceneManagement.SceneManager.LoadScene(scenename);
