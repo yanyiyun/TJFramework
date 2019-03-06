@@ -15,6 +15,8 @@ namespace TJ
             builder.ParseRule();
             builder.Export();
             builder.End();
+
+            Debug.Log("Builde AssetBundles OK!");
         }
 
         [MenuItem("TJ/Sync Lua Files")]

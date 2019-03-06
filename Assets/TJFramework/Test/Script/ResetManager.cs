@@ -29,7 +29,7 @@ namespace TJ
             doing = true;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
-            //第0个场景为不被热更新影响的启动场景.
+            //第0个场景认为不被热更新影响的启动场景.
             SceneManager.LoadScene(0);
         }
 
@@ -37,13 +37,22 @@ namespace TJ
         {
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
 
-
-            Debug.Log("--========OnSceneUnloaded");
-
             //TODO: Object Pool, timer or something
 
             //TODO: 需要增加event, 需要4个事件. event不能是lua的回调, 因为LuaManager理应被Reset
             //如果是自己的代码. 则无所谓
+
+            if (LuaManager.Instance.funcEngineReset != null)
+            {
+                try
+                {
+                    LuaManager.Instance.funcEngineReset.Action();
+                }
+                catch(Exception e)
+                {
+                    Debug.LogError(e);
+                }
+            }
 
             LuaManager.Instance.Clear();
             BundleManager.Instance.Clear();
@@ -53,6 +62,8 @@ namespace TJ
 
 
             doing = false;
+
+            Debug.Log("Engine Reset Success!");
         }
     }
 }

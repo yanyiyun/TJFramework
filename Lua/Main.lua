@@ -13,7 +13,9 @@ end
 
 print("do once")
 
-
+CS.TJ.LuaManager.Instance.funcEngineReset = function ()
+    print("call lua funcEngineReset")
+end
 
 
 return function()

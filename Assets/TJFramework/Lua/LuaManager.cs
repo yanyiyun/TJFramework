@@ -60,6 +60,8 @@ namespace TJ
             if (luaenv == null)
                 return;
 
+            funcEngineReset = null;
+
             //在没有清除所有Delegate时, 会抛出异常.
             luaenv.Dispose();
             luaenv = null;
@@ -83,6 +85,10 @@ namespace TJ
             }
 
         }
+
+
+        //游戏被重置时调用
+        public LuaFunction funcEngineReset;
 
 
 
