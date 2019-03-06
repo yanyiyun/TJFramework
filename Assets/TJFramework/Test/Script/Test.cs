@@ -92,15 +92,15 @@ public class Test : MonoBehaviour {
         //req.Asset.Instantiate();
 
 
-        var req = mgr.LoadAssetAsync("assets/tjframework/test/cylinder.prefab");
-        yield return req;
-        var asset = req.Asset;
-        asset.Instantiate();
+        //var req = mgr.LoadAssetAsync("assets/tjframework/test/cylinder.prefab");
+        //yield return req;
+        //var asset = req.Asset;
+        //asset.Instantiate();
 
-        yield return null;
-        System.GC.Collect();
-        System.GC.WaitForPendingFinalizers();
-        //mgr.UnloadUnusedBundles(false);
+        //yield return null;
+        //System.GC.Collect();
+        //System.GC.WaitForPendingFinalizers();
+        ////mgr.UnloadUnusedBundles(false);
 
 
         yield return null;

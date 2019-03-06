@@ -1,12 +1,11 @@
 
+local util = require("xlua.util")
 
 return function ()
     local inst = {
         num = 0,
 
         OnBind = function(self)
-            print("OnBind, CreateScene1Inst")
-
             self.btnAddOne = self.comp.transform:Find("btnAddOne")
             local btnComp = self.btnAddOne:GetComponent(typeof(CS.UnityEngine.UI.Button))
             btnComp.onClick:AddListener(function()
@@ -32,11 +31,17 @@ return function ()
         end,
 
         Start = function(self)
-            print("Start")
+            --协程演示
+            self.comp:StartCoroutine(util.cs_generator(function()
+                local req = CS.TJ.BundleManager.Instance:LoadAssetAsync("assets/tjframework/test/cylinder.prefab")
+                coroutine.yield(req)
+                local asset = req.Asset
+                asset:Instantiate()
+            end))
+
         end,
 
         OnDestroy = function(self)
-            print("OnDestroy")
         end,
 
         AddOne = function(self)

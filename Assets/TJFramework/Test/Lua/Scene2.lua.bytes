@@ -12,6 +12,12 @@ end
 function Scene2View:OnBind()
     print("OnBind, Scene2View")
 
+    --垃圾回收演示
+    collectgarbage("collect")
+    CS.System.GC.Collect();
+    CS.System.GC.WaitForPendingFinalizers()
+    CS.TJ.BundleManager.Instance:UnloadUnusedBundles(false)
+
     self.btnScene = self.comp.transform:Find("btnScene")
     local btnComp = self.btnScene:GetComponent(typeof(CS.UnityEngine.UI.Button))
     btnComp.onClick:AddListener(function()
