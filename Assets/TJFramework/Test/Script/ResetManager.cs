@@ -29,11 +29,7 @@ namespace TJ
             doing = true;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
-<<<<<<< HEAD
             //第0个场景为不被热更新影响的启动场景.
-=======
-            //第一个场景为不被热更新影响的启动场景.
->>>>>>> 82da9a9505c9399ca6dc5c138ae970b6ed689e45
             SceneManager.LoadScene(0);
         }
 
