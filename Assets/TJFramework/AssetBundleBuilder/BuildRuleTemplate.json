@@ -23,7 +23,7 @@
     "rules": [
         {"directory": "Assets/TJFramework/Test/Scene", "patterns": ["*.unity"]},
         {"directory": "Assets/TJFramework/Test", "patterns": ["*.prefab"], "recursion": true, "bundle": null, "dummy": false},
-        {"directory": "Assets/TJFramework/Test/lua", "patterns": ["*.bytes"], "recursion": true, "bundle": "lua.ab"},
+        {"directory": "Assets/TJFramework/Test/lua", "patterns": ["*.txt"], "recursion": true, "bundle": "lua.ab"},
         {"directory": "Assets/TJFramework/Test/Materials", "patterns": ["*.*"], "recursion": true, "bundle": "sha.ab", "dummy": true}
     ]
 }

@@ -8,8 +8,11 @@ namespace TJ
 {
     public class LuaManager : Singleton<LuaManager>
     {
+        //Lua初始化时的搜索目录
+        public static string[] InitSearchPaths = {""};
+
         LuaEnv luaenv;
-        List<string> searchPaths = new List<string>() { "" };
+        List<string> searchPaths;
         HashSet<Bundle> luaBundles = new HashSet<Bundle>();
 
         public LuaEnv LuaEnv { get { return luaenv; } }
@@ -72,6 +75,8 @@ namespace TJ
             //在没有清除所有Delegate时, 会抛出异常.
             luaenv.Dispose();
             luaenv = null;
+
+            searchPaths = null;
         }
 
         public void Reset()
@@ -79,6 +84,8 @@ namespace TJ
             Clear();
 
             luaenv = new LuaEnv();
+
+            searchPaths = new List<string>(InitSearchPaths);
 
 #if UNITY_EDITOR
             if (IsExternLuaMode)
@@ -114,10 +121,10 @@ namespace TJ
 
         byte[] ScriptLoader(ref string filepath)
         {
-            filepath = filepath.Replace('.', '/') + ".lua.bytes";
+            filepath = filepath.Replace('.', '/') + ".lua.txt";
             foreach (var sp in searchPaths)
             {
-                var path = Path.Combine(Config.LuaScriptDirectory, Path.Combine(sp, filepath)).Replace('\\', '/');
+                var path = Path.Combine(sp, filepath).Replace('\\', '/');
                 //对于AssetBundle的判定方式, 取决于文件列表是否存在资源, 所以不会出现遍历顺序可能出现错误的问题.
                 if (BundleManager.Instance.AssetExists(path))
                 {
@@ -165,10 +172,10 @@ namespace TJ
 
         byte[] ExternScriptLoader(ref string filepath)
         {
-            filepath = filepath.Replace('.', '/') + ".lua";
+            filepath = filepath.Replace('.', '/') + ".lua.txt";
             foreach (var sp in searchPaths)
             {
-                var path = Path.Combine(Config.LuaScriptExternDirectory, Path.Combine(sp, filepath)).Replace('\\', '/');
+                var path =  Path.Combine(sp, filepath).Replace('\\', '/');
                 if (File.Exists(path))
                 {
                     filepath = path;

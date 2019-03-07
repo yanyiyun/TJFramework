@@ -10,6 +10,8 @@ namespace TJ
 
         void Awake()
         {
+            LuaManager.InitSearchPaths = new string[] { "Assets/TJFramework/Test/Lua" };
+
             var bundlename = BundleManager.Instance.AssetBundleName(sceneName);
             BundleManager.Instance.LoadBundle(bundlename);
             SceneManager.LoadScene(sceneName);
