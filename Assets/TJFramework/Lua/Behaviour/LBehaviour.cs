@@ -27,6 +27,8 @@ namespace TJ
             cbStart = null;
             cbOnDestroy = null;
 
+            luaInst.Set<string, object>("comp", null);
+
             luaInst = null;
         }
 
