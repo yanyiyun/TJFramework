@@ -12,6 +12,7 @@ namespace TJ
     public class SimulateBundleManager : BundleManager
     {
         Dictionary<string, SimulateBundle> bundles = new Dictionary<string, SimulateBundle>();
+        HashSet<string> holdBundleNames = new HashSet<string>();
 
         public override bool CanClear()
         {
@@ -20,6 +21,7 @@ namespace TJ
 
         public override void Clear()
         {
+            holdBundleNames.Clear();
             bundles.Clear();
         }
 
@@ -76,7 +78,7 @@ namespace TJ
             return new SimulateAssetLoadRequest(asset);
         }
 
-        public override Bundle LoadBundle(string bundleName)
+        public override Bundle LoadBundle(string bundleName, bool hold = false)
         {
 #if DEBUG
             if (System.Text.RegularExpressions.Regex.IsMatch(bundleName, "[A-Z]"))
@@ -92,7 +94,7 @@ namespace TJ
             return bundle;
         }
 
-        public override LoaderLoadRequest LoadBundleAsync(string bundleName)
+        public override LoaderLoadRequest LoadBundleAsync(string bundleName, bool hold = false)
         {
 #if DEBUG
             if (System.Text.RegularExpressions.Regex.IsMatch(bundleName, "[A-Z]"))
@@ -107,6 +109,22 @@ namespace TJ
             }
 
             return new SimulateLoaderLoadRequest(bundle);
+        }
+
+        public override void SetBundleHold(Bundle bundle, bool hold)
+        {
+            var bundleName = bundle.BundleName;
+
+            if (hold && !holdBundleNames.Contains(bundleName))
+            {
+                bundle.Hold(this);
+                holdBundleNames.Add(bundleName);
+            }
+            else if (!hold && holdBundleNames.Contains(bundleName))
+            {
+                bundle.Return(this);
+                holdBundleNames.Remove(bundleName);
+            }
         }
 
         public override void UnloadUnusedBundles(bool unloadAllLoadedObjects) { }

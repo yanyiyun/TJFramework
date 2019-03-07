@@ -21,6 +21,7 @@ namespace TJ
         public string bundleName;
         public string bundleFullPath;
         public int waitDepCount;
+        public bool hold = false;
         public bool depError = false;
         public AssetBundle assetBundleCache;
         public AssetBundleBundle bundle;
@@ -156,6 +157,8 @@ namespace TJ
                     Debug.Assert(bundle == null);
                     AssetBundleManager mgr = AssetBundleManager.Instance as AssetBundleManager;
                     bundle = new AssetBundleBundle(this, mgr.CollectDepAssetBundleBundles(bundleName));
+                    if (hold)
+                        mgr.SetBundleHold(bundle, true);
                 }
 
                 //通知

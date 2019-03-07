@@ -22,6 +22,7 @@ namespace TJ
         Dictionary<string, List<string>> bundles;
 
         Dictionary<string, AssetBundleLoader> loaders = new Dictionary<string, AssetBundleLoader>();
+        HashSet<string> holdBundleNames = new HashSet<string>();
 
 
         void Awake()
@@ -60,6 +61,7 @@ namespace TJ
 
             List<string> loadingBundles = new List<string>();
             List<string> loadingAssets = new List<string>();
+            holdBundleNames.Clear();
             this.StopAllCoroutines();
             foreach (var loader in loaders.Values)
             {
@@ -198,7 +200,7 @@ namespace TJ
         }
 
 
-        public override Bundle LoadBundle(string bundleName)
+        public override Bundle LoadBundle(string bundleName, bool hold = false)
         {
 #if DEBUG
             if (System.Text.RegularExpressions.Regex.IsMatch(bundleName, "[A-Z]"))
@@ -210,7 +212,11 @@ namespace TJ
             {
                 if (loader.state == AssetBundleLoader.State.Loading)
                     Debug.LogError(string.Format("AssetBundleLoader '{0}' is loading aync, CANNOT load sync!", loader.bundleName));
-                return loader.bundle;
+
+                Bundle bundle = loader.bundle;
+                if (hold && bundle != null)
+                    SetBundleHold(bundle, true);
+                return bundle;
             }
 
 
@@ -221,12 +227,12 @@ namespace TJ
             }
 
 
-            loader = LoadBundleAndDepImpl(bundleName);
-            return loader != null ? loader.bundle : null;
+            loader = LoadBundleAndDepImpl(bundleName, hold);
+            return loader != null ? loader.bundle : null; ;
         }
 
 
-        AssetBundleLoader LoadBundleAndDepImpl(string bundleName)
+        AssetBundleLoader LoadBundleAndDepImpl(string bundleName, bool hold)
         {
             AssetBundleLoader abLoader;
             if (loaders.TryGetValue(bundleName, out abLoader))
@@ -238,7 +244,7 @@ namespace TJ
             foreach (var dep in deps)
             {
                 //递归加载Loader
-                LoadBundleAndDepImpl(dep);
+                LoadBundleAndDepImpl(dep, false);
             }
 
             //创建
@@ -247,6 +253,7 @@ namespace TJ
                 bundleName = bundleName,
                 bundleFullPath = ResourceUtils.FullPathForAssetBundleApi(FilePath(bundleName)),
                 waitDepCount = deps.Length,
+                hold = hold,
             };
             bool isAyncCollision = false;
             foreach (var dep in deps)
@@ -282,7 +289,7 @@ namespace TJ
         }
 
 
-        public override LoaderLoadRequest LoadBundleAsync(string bundleName)
+        public override LoaderLoadRequest LoadBundleAsync(string bundleName, bool hold = false)
         {
 #if DEBUG
             if (System.Text.RegularExpressions.Regex.IsMatch(bundleName, "[A-Z]"))
@@ -292,6 +299,13 @@ namespace TJ
             AssetBundleLoader loader;
             if (loaders.TryGetValue(bundleName, out loader))
             {
+                if (hold)
+                {
+                    if (!loader.IsComplete)
+                        loader.hold = true;
+                    else if (loader.bundle != null)
+                        SetBundleHold(loader.bundle, true);
+                }
                 return new AssetBundleLoaderLoadRequest(loader);
             }
 
@@ -301,12 +315,12 @@ namespace TJ
                 return new AssetBundleLoaderLoadRequest(null);
             }
 
-            loader = LoadBundleAndDepAsyncImpl(bundleName);
+            loader = LoadBundleAndDepAsyncImpl(bundleName, hold);
             return new AssetBundleLoaderLoadRequest(loader);
         }
 
 
-        AssetBundleLoader LoadBundleAndDepAsyncImpl(string bundleName)
+        AssetBundleLoader LoadBundleAndDepAsyncImpl(string bundleName, bool hold)
         {
             AssetBundleLoader abLoader;
             if (loaders.TryGetValue(bundleName, out abLoader))
@@ -318,7 +332,7 @@ namespace TJ
             foreach (var dep in deps)
             {
                 //递归加载Loader
-                LoadBundleAndDepAsyncImpl(dep);
+                LoadBundleAndDepAsyncImpl(dep, false);
             }
 
             //创建
@@ -327,6 +341,7 @@ namespace TJ
                 bundleName = bundleName,
                 bundleFullPath = ResourceUtils.FullPathForAssetBundleApi(FilePath(bundleName)),
                 waitDepCount = deps.Length,
+                hold = hold,
             };
             foreach (var dep in deps)
             {
@@ -349,10 +364,25 @@ namespace TJ
         }
 
 
-        /// <summary>
-        /// 移除无用的Bundle. 就是没有被引用的
-        /// 这个函数和Resources.UnloadUnusedAssets();配合使用, 效果更佳哦
-        /// </summary>
+        public override void SetBundleHold(Bundle bundle, bool hold)
+        {
+            var bundleName = bundle.BundleName;
+
+            if (hold && !holdBundleNames.Contains(bundleName))
+            {
+                bundle.Hold(this);
+                holdBundleNames.Add(bundleName);
+            }
+            else if (!hold && holdBundleNames.Contains(bundleName))
+            {
+                bundle.Return(this);
+                holdBundleNames.Remove(bundleName);
+            }
+        }
+
+
+        //移除无用的Bundle. 就是没有被引用的
+        //这个函数和Resources.UnloadUnusedAssets();配合使用, 效果更佳哦
         public override void UnloadUnusedBundles(bool unloadAllLoadedObjects)
         {
             bool hasUnusedBundle = false;
@@ -378,8 +408,7 @@ namespace TJ
         }
 
 
-        //---------------------------------------------------------------------
-        public HashSet<AssetBundleBundle> CollectDepAssetBundleBundles(string bundleName)
+        internal HashSet<AssetBundleBundle> CollectDepAssetBundleBundles(string bundleName)
         {
             HashSet<AssetBundleBundle> set = new HashSet<AssetBundleBundle>();
             string[] deps = manifest.GetDirectDependencies(bundleName);

@@ -30,6 +30,7 @@ namespace TJ
 
         public void Begin()
         {
+            AssetDatabase.Refresh();
             EditorUtility.DisplayProgressBar("Loading", "Loading...", 0.1f);
             AssetBundleUtils.Init();
         }

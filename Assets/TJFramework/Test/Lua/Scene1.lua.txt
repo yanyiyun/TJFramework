@@ -15,11 +15,16 @@ return function ()
             self.btnChangeScene = self.comp.transform:Find("btnChangeScene")
             local btnComp = self.btnChangeScene:GetComponent(typeof(CS.UnityEngine.UI.Button))
             btnComp.onClick:AddListener(function()
-                print("change scene")
-                local scenename = "Assets/TJFramework/Test/Scene/Scene2.unity";
-                local bname = CS.TJ.BundleManager.Instance:AssetBundleName(scenename)
-                CS.TJ.BundleManager.Instance:LoadBundle(bname);
-                CS.UnityEngine.SceneManagement.SceneManager.LoadScene(scenename);
+                --演示异步场景加载
+                self.comp:StartCoroutine(util.cs_generator(function()
+                    print("co change scene")
+                    local scenename = "Assets/TJFramework/Test/Scene/Scene2.unity";
+                    local bname = CS.TJ.BundleManager.Instance:AssetBundleName(scenename)
+                    local req = CS.TJ.BundleManager.Instance:LoadBundleAsync(bname, true);
+                    coroutine.yield(req)
+                    local req1 =CS.UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenename);
+                    -- coroutine.yield(req1)
+                end))
             end)
 
             self.btnResetGame = self.comp.transform:Find("btnResetGame")
@@ -38,7 +43,6 @@ return function ()
                 local asset = req.Asset
                 asset:Instantiate()
             end))
-
         end,
 
         OnDestroy = function(self)

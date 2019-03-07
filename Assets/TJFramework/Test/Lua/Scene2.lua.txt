@@ -24,7 +24,7 @@ function Scene2View:OnBind()
         print("change scene")
         local scenename = "Assets/TJFramework/Test/Scene/Scene1.unity";
         local bname = CS.TJ.BundleManager.Instance:AssetBundleName(scenename)
-        CS.TJ.BundleManager.Instance:LoadBundle(bname);
+        CS.TJ.BundleManager.Instance:LoadBundle(bname, true);
         CS.UnityEngine.SceneManagement.SceneManager.LoadScene(scenename);
 
         -- CS.TJ.BundleManager.Instance:LoadBundle("assets/tjframework/test/scene1.unity.ab");

@@ -13,6 +13,11 @@ CS.TJ.LuaManager.Instance.funcEngineReset = function ()
     print("call lua funcEngineReset")
 end
 
+-- 演示持有自己
+local scenename = CS.UnityEngine.SceneManagement.SceneManager.GetActiveScene().path
+local bname = CS.TJ.BundleManager.Instance:AssetBundleName(scenename)
+local bundle = CS.TJ.BundleManager.Instance:LoadBundle(bname)
+CS.TJ.BundleManager.Instance:SetBundleHold(bundle, true)
 
 return function()
     print("init scene")

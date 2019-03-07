@@ -18,8 +18,9 @@ namespace TJ
         public abstract Asset LoadAsset(string assetName, Type type);
         public abstract AssetLoadRequest LoadAssetAsync(string assetName);
         public abstract AssetLoadRequest LoadAssetAsync(string assetName, Type type);
-        public abstract Bundle LoadBundle(string bundleName);
-        public abstract LoaderLoadRequest LoadBundleAsync(string bundleName);
+        public abstract Bundle LoadBundle(string bundleName, bool hold = false);
+        public abstract LoaderLoadRequest LoadBundleAsync(string bundleName, bool hold = false);
+        public abstract void SetBundleHold(Bundle bundle, bool hold);
         public abstract void UnloadUnusedBundles(bool unloadAllLoadedObjects);
 
 
