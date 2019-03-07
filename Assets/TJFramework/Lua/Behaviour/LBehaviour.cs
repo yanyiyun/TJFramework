@@ -14,12 +14,22 @@ namespace TJ
         Action<LuaTable> cbOnDestroy;
 
 
-        public virtual void Bind(LuaTable inst)
+        public void Bind(LuaTable inst)
         {
             luaInst = inst;
 
             luaInst.Get("Start", out cbStart);
             luaInst.Get("OnDestroy", out cbOnDestroy);
+            BindAction();
+
+            luaInst.Set("comp", this);
+            Action<LuaTable> cbOnBind;
+            luaInst.Get("OnBind", out cbOnBind);
+            if (cbOnBind != null) cbOnBind(luaInst);
+        }
+
+        protected virtual void BindAction()
+        {
         }
 
         protected virtual void Clear()
@@ -36,7 +46,7 @@ namespace TJ
         {
             if (moduleName.Trim().Length != 0)
             {
-                object[] rets = LuaManager.Instance.DoString(string.Format("return require('{0}')", moduleName));
+                object[] rets = LuaManager.Instance.DoString(string.Format("return require('{0}')", moduleName.Trim()));
                 if (rets.Length >= 1)
                 {
                     LuaTable tluaInst = null;
@@ -64,10 +74,6 @@ namespace TJ
                     if (tluaInst != null)
                     {
                         Bind(tluaInst);
-                        tluaInst.Set("comp", this);
-                        Action<LuaTable> cbOnBind;
-                        tluaInst.Get("OnBind", out cbOnBind);
-                        if (cbOnBind != null) cbOnBind(tluaInst);
                     }
                 }
             }
@@ -90,10 +96,8 @@ namespace TJ
     {
         Action<LuaTable> cbUpdate;
 
-        public override void Bind(LuaTable inst)
+        protected override void BindAction()
         {
-            base.Bind(inst);
-
             luaInst.Get("Update", out cbUpdate);
         }
 
@@ -115,10 +119,8 @@ namespace TJ
     {
         Action<LuaTable> cbFixedUpdate;
 
-        public override void Bind(LuaTable inst)
+        protected override void BindAction()
         {
-            base.Bind(inst);
-
             luaInst.Get("FixedUpdate", out cbFixedUpdate);
         }
 
@@ -140,10 +142,8 @@ namespace TJ
     {
         Action<LuaTable> cbLateUpdate;
 
-        public override void Bind(LuaTable inst)
+        protected override void BindAction()
         {
-            base.Bind(inst);
-
             luaInst.Get("LateUpdate", out cbLateUpdate);
         }
 
@@ -167,10 +167,8 @@ namespace TJ
         Action<LuaTable> cbFixedUpdate;
         Action<LuaTable> cbLateUpdate;
 
-        public override void Bind(LuaTable inst)
+        protected override void BindAction()
         {
-            base.Bind(inst);
-
             luaInst.Get("Update", out cbUpdate);
             luaInst.Get("FixedUpdate", out cbFixedUpdate);
             luaInst.Get("LateUpdate", out cbLateUpdate);
@@ -207,10 +205,8 @@ namespace TJ
         Action<LuaTable> cbOnDisable;
         Action<LuaTable> cbOnEnable;
 
-        public override void Bind(LuaTable inst)
+        protected override void BindAction()
         {
-            base.Bind(inst);
-
             luaInst.Get("OnDisable", out cbOnDisable);
             luaInst.Get("OnEnable", out cbOnEnable);
         }

@@ -4,10 +4,6 @@ local function LBehaviourBind(gameObject, luaInst, LBehaviour)
     LBehaviour = LBehaviour or CS.TJ.LBehaviour;
     local comp = gameObject:AddComponent(typeof(LBehaviour));
     comp:Bind(luaInst);
-    luaInst.comp = comp;
-    if luaInst.OnBind then
-        luaInst:OnBind()
-    end
 end
 
 
