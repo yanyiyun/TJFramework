@@ -6,7 +6,7 @@ using XLua;
 
 namespace TJ
 {
-    public class LuaManager : Singleton<LuaManager>
+    public class LuaManager : Singleton<LuaManager>, IDisposable
     {
         //Lua初始化时的搜索目录
         public static string[] InitSearchPaths = {""};
@@ -58,24 +58,27 @@ namespace TJ
             return err;
         }
 
-        public void Clear()
+
+        //游戏被重置时调用
+        public LuaFunction funcEngineReset;
+        public void SafeCallFuncEngineReset()
         {
-            if (luaenv == null)
-                return;
-
-            funcEngineReset = null;
-
-            //在没有清除所有Delegate时, 会抛出异常.
-            luaenv.Dispose();
-            luaenv = null;
-
-            searchPaths = null;
+            if (funcEngineReset != null)
+            {
+                try
+                {
+                    funcEngineReset.Action();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                }
+            }
         }
 
-        public void Reset()
-        {
-            Clear();
 
+        void Awake()
+        {
             luaenv = new LuaEnv();
 
             searchPaths = new List<string>(InitSearchPaths);
@@ -90,19 +93,31 @@ namespace TJ
             {
                 luaenv.AddLoader(ScriptLoader);
             }
-
         }
 
-
-        //游戏被重置时调用
-        public LuaFunction funcEngineReset;
-
-
-
-        void Awake()
+        public void Dispose()
         {
-            Reset();
+            funcEngineReset = null;
+
+            //在没有清除所有Delegate时, 会抛出异常.
+            luaenv.Dispose();
         }
+
+
+        //public void Clear()
+        //{
+        //    if (luaenv == null)
+        //        return;
+
+        //    funcEngineReset = null;
+
+        //    //在没有清除所有Delegate时, 会抛出异常.
+        //    luaenv.Dispose();
+        //    luaenv = null;
+
+        //    searchPaths = null;
+        //}
+
 
         void Update()
         {

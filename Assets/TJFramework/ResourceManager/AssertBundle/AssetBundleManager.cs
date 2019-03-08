@@ -25,12 +25,7 @@ namespace TJ
         HashSet<string> holdBundleNames = new HashSet<string>();
 
 
-        void Awake()
-        {
-            Reset();
-        }
-
-        public override bool CanClear()
+        public override bool CanDispose()
         {
             foreach (var loader in loaders.Values)
             {
@@ -50,19 +45,12 @@ namespace TJ
         /// 如果有异步加载中的AssetBundle, 后续会出错
         /// 如果有异步加载中的Asset, 后续会出错.
         /// </summary>
-        public override void Clear()
+        public override void Dispose()
         {
-            if (manifest == null)
-                return;
-
-            manifest = null;
-            assets = null;
-            bundles = null;
+            this.StopAllCoroutines();
 
             List<string> loadingBundles = new List<string>();
             List<string> loadingAssets = new List<string>();
-            holdBundleNames.Clear();
-            this.StopAllCoroutines();
             foreach (var loader in loaders.Values)
             {
                 if (loader.state == AssetBundleLoader.State.Loading)
@@ -89,10 +77,47 @@ namespace TJ
             }
         }
 
-        public override void Reset()
-        {
-            Clear();
+        //public override void Clear()
+        //{
+        //    if (manifest == null)
+        //        return;
 
+        //    manifest = null;
+        //    assets = null;
+        //    bundles = null;
+
+        //    List<string> loadingBundles = new List<string>();
+        //    List<string> loadingAssets = new List<string>();
+        //    holdBundleNames.Clear();
+        //    this.StopAllCoroutines();
+        //    foreach (var loader in loaders.Values)
+        //    {
+        //        if (loader.state == AssetBundleLoader.State.Loading)
+        //        {
+        //            loadingBundles.Add(loader.bundleName);
+        //        }
+
+        //        if (loader.bundle != null)
+        //        {
+        //            if (loader.bundle.IsLoadingAsync)
+        //                loadingAssets.Add(loader.bundle.BundleName);
+        //            loader.bundle.Dispose(true);
+        //        }
+        //    }
+        //    loaders.Clear();
+
+        //    foreach (var str in loadingBundles)
+        //    {
+        //        Debug.LogWarningFormat("AssetBundleLoader '{0}' is destroyed, but in loading!", str);
+        //    }
+        //    foreach (var str in loadingBundles)
+        //    {
+        //        Debug.LogWarningFormat("AssetBundleBundle '{0}' is destroyed, but in loading!", str);
+        //    }
+        //}
+
+        void Awake()
+        {
             string abmPath = ResourceUtils.FullPathForAssetBundleApi(FilePath(ResourceUtils.AssetBundleFolder));
             if (abmPath == "")
                 throw new Exception("AssetBundleManifest file CAN NOT be located");

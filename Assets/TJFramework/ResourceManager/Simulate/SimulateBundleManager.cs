@@ -14,21 +14,11 @@ namespace TJ
         Dictionary<string, SimulateBundle> bundles = new Dictionary<string, SimulateBundle>();
         HashSet<string> holdBundleNames = new HashSet<string>();
 
-        public override bool CanClear()
+        public override bool CanDispose()
         {
             return true;
         }
 
-        public override void Clear()
-        {
-            holdBundleNames.Clear();
-            bundles.Clear();
-        }
-
-        public override void Reset()
-        {
-            Clear();
-        }
 
         public override bool AssetExists(string assetName)
         {

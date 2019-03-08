@@ -7,15 +7,21 @@ using UnityEngine.SceneManagement;
 namespace TJ
 {
     //TODO: 这个可以改成热更新的实例代码, 而不属于框架部分. 毕竟这个定制性很强
-    public class ResetManager : Singleton<ResetManager>
+    //这个不用写成manager
+    //可以改成一个factory生成的普通类. 执行完成后, 也把自己移除了.
+    public class ResetManager : Singleton<ResetManager>, IDisposable
     {
         public string resetSceneName;
 
         bool doing = false;
 
+        public void Dispose()
+        {
+        }
+
         public bool CanReset()
         {
-            if (!BundleManager.Instance.CanClear())
+            if (!BundleManager.Instance.CanDispose())
                 return false;
 
             return true;
@@ -42,26 +48,17 @@ namespace TJ
             //TODO: 需要增加event, 需要4个事件. event不能是lua的回调, 因为LuaManager理应被Reset
             //如果是自己的代码. 则无所谓
 
-            if (LuaManager.Instance.funcEngineReset != null)
-            {
-                try
-                {
-                    LuaManager.Instance.funcEngineReset.Action();
-                }
-                catch(Exception e)
-                {
-                    Debug.LogError(e);
-                }
-            }
+            
+            LuaManager.Instance.SafeCallFuncEngineReset();
+            
 
-            LuaManager.Instance.Clear();
-            BundleManager.Instance.Clear();
-
-            BundleManager.Instance.Reset();
-            LuaManager.Instance.Reset();
+            LuaManager.DoDispose();
+            BundleManager.DoDispose();
 
 
             doing = false;
+
+            ResetManager.DoDispose();   //TODO:不要这么写
 
             Debug.Log("Engine Reset Success!");
         }
