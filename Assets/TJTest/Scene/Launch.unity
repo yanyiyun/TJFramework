@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f87dd437e5bf6744980c68ee535ace5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Assets/TJFramework/Test/Scene/Scene1.unity
+  sceneName: Assets/TJTest/Scene/Scene1.unity
 --- !u!4 &164930768
 Transform:
   m_ObjectHideFlags: 0

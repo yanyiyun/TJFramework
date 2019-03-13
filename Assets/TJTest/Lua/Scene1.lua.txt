@@ -18,7 +18,7 @@ return function ()
                 --演示异步场景加载
                 self.comp:StartCoroutine(util.cs_generator(function()
                     print("co change scene")
-                    local scenename = "Assets/TJFramework/Test/Scene/Scene2.unity";
+                    local scenename = "Assets/TJTest/Scene/Scene2.unity";
                     local bname = CS.TJ.BundleManager.Instance:AssetBundleName(scenename)
                     local req = CS.TJ.BundleManager.Instance:LoadBundleAsync(bname, true);
                     coroutine.yield(req)
@@ -38,7 +38,7 @@ return function ()
         Start = function(self)
             --协程演示
             self.comp:StartCoroutine(util.cs_generator(function()
-                local req = CS.TJ.BundleManager.Instance:LoadAssetAsync("assets/tjframework/test/cylinder.prefab")
+                local req = CS.TJ.BundleManager.Instance:LoadAssetAsync("assets/tjtest/cylinder.prefab")
                 coroutine.yield(req)
                 local asset = req.Asset
                 asset:Instantiate()

@@ -21,9 +21,9 @@
     ],
 
     "rules": [
-        {"directory": "Assets/TJFramework/Test/Scene", "patterns": ["*.unity"]},
-        {"directory": "Assets/TJFramework/Test", "patterns": ["*.prefab"], "recursion": true, "bundle": null, "dummy": false},
-        {"directory": "Assets/TJFramework/Test/lua", "patterns": ["*.txt"], "recursion": true, "bundle": "lua.ab"},
-        {"directory": "Assets/TJFramework/Test/Materials", "patterns": ["*.*"], "recursion": true, "bundle": "sha.ab", "dummy": true}
+        {"directory": "Assets/TJTest/Scene", "patterns": ["*.unity"]},
+        {"directory": "Assets/TJTest", "patterns": ["*.prefab"], "recursion": true, "bundle": null, "dummy": false},
+        {"directory": "Assets/TJTest/lua", "patterns": ["*.txt"], "recursion": true, "bundle": "lua.ab"},
+        {"directory": "Assets/TJTest/Materials", "patterns": ["*.*"], "recursion": true, "bundle": "sha.ab", "dummy": true}
     ]
 }

@@ -10,9 +10,11 @@ namespace TJ
 
         void Awake()
         {
-            LuaManager.InitSearchPaths = new string[] { "Assets/TJFramework/Test/Lua" };
+            LuaManager.InitSearchPaths = new string[] { "Assets/TJTest/Lua" };
 
             var bundlename = BundleManager.Instance.AssetBundleName(sceneName);
+            if (bundlename == null)
+                throw new System.Exception($"Can't find {sceneName}");
             BundleManager.Instance.LoadBundle(bundlename);
             SceneManager.LoadScene(sceneName);
         }
