@@ -39,4 +39,5 @@ sysinfo.txt
 
 # ==============================
 Assets/StreamingAssets*
-Assets/XLua*
+Assets/XLua/Gen
+Assets/XLua/Gen.meta
