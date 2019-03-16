@@ -11,12 +11,13 @@ namespace TJ
         /// <summary>
         /// 热更新目录名
         /// </summary>
-        public const string HotUpdateFolder = "hotupdate";
+        public static string HotUpdateFolder = "hotupdate";
         public static string HotUpdatePath { get { return Path.Combine(Application.persistentDataPath, HotUpdateFolder); } }
 
         public const string AssetBundleFolder = "assetbundles";
         public const string AssetBundleFileList = "assetlist.txt";
 
+        //path可以是绝对路径
         public static byte[] LoadBytes(string path)
         {
             //外部热更新目录
@@ -58,6 +59,7 @@ namespace TJ
         /// <summary>
         /// 获取完整的路径, 路径是AssetBundle Api可识别的方式.
         /// 大部分情况, 返回值都可以用C#的文件函数直接读取. 一些特殊情况除外, 比如android
+        /// TODO:anroid的路径需要另外处理
         /// </summary>
         /// <param name="path"></param>
         /// <param name="inApp"></param>

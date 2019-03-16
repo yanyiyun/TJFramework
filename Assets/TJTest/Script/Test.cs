@@ -62,7 +62,7 @@ public class Test : MonoBehaviour {
         //TJ.BundleManager.Create();
         //TJ.BundleManager.CreateInstance<TJ.AssetBundleManager>();
         //TJ.BundleManager.CreateInstance<TJ.SimulateBundleManager>();
-        var mgr = TJ.BundleManager.Instance;
+        //var mgr = TJ.BundleManager.Instance;
 
         //var req = mgr.LoadBundleAsync("assets/scenes/materials/sha.ab");
         //Debug.Log(mgr.LoadBundle("assets/scenes/samplescene.unity.ab"));
@@ -120,32 +120,8 @@ public class Test : MonoBehaviour {
 
         //TJ.LuaManager.Instance.DoString(@"require('test')");
 
+
     }
-
-
-
- //   // Update is called once per frame
- //   void Update () {
-		
-	//}
-
- //   void Awake()
- //   {
- //       Debug.Log("Awake");
- //   }
-
- //   void OnEnable()
- //   {
- //       Debug.Log("OnEnable called");
- //       //SceneManager.sceneLoaded += OnSceneLoaded;
- //       //SceneManager.sceneUnloaded += OnSceneUnloaded;
- //   }
-
- //   private void OnDestroy()
- //   {
- //       Debug.Log("Test Destroy");
- //   }
-
 
 }
 
