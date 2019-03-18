@@ -7,7 +7,7 @@ namespace TJ
 {
     public class FrameworkMenuItems
     {
-        [MenuItem("TJ/Builde AssetBundles")]
+        [MenuItem("TJ/Build AssetBundles")]
         static void BuildAssetBundles()
         {
             AssetBundleBuilder builder = new AssetBundleBuilder(new AssetBundlePathResolver(), Config.AssetBundleBuildRulePath);
@@ -16,7 +16,7 @@ namespace TJ
             builder.Export();
             builder.End();
 
-            Debug.Log("Builde AssetBundles OK!");
+            Debug.Log("Build AssetBundles OK!");
         }
 
         //[MenuItem("TJ/Sync Lua Files")]

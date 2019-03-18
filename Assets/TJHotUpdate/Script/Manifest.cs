@@ -389,74 +389,74 @@ namespace HotUpdate
 
 
 
-    public class ManifestXX
-    {
-        static string Text = @"
-{
-    'assets': {
-        'sapatch_100032_100830.zip': {
-            'compressed': true,
-            'md5': 'BDF0F9CD597CD337EE76493CC8CD633F',
-            'size': 15430879
-        },
-        'sapatch_100831_101045.zip': {
-            'compressed': true,
-            'md5': '5A58B3F9369B7B5ECE8850FC5FA8A5FB',
-            'size': 3582416
-        }
-    },
-    'engineVersion': '3.16',
-    'packageUrl': 'http://cdndl.taojingame.com/stararc/alpha2/patch/',
-    'remoteManifestUrl': 'http://stararcpatch.taojingame.com/stararc/alpha2/info/project.manifest',
-    'remoteVersionUrl': 'http://stararcpatch.taojingame.com/stararc/alpha2/info/version.manifest',
-    'searchPaths': [
-        'update0000g/'
-    ],
-    'svnVersion': '103268',
-    'version': '1.0.19'
-}
-";
+//    public class ManifestXX
+//    {
+//        static string Text = @"
+//{
+//    'assets': {
+//        'sapatch_100032_100830.zip': {
+//            'compressed': true,
+//            'md5': 'BDF0F9CD597CD337EE76493CC8CD633F',
+//            'size': 15430879
+//        },
+//        'sapatch_100831_101045.zip': {
+//            'compressed': true,
+//            'md5': '5A58B3F9369B7B5ECE8850FC5FA8A5FB',
+//            'size': 3582416
+//        }
+//    },
+//    'engineVersion': '3.16',
+//    'packageUrl': 'http://cdndl.taojingame.com/stararc/alpha2/patch/',
+//    'remoteManifestUrl': 'http://stararcpatch.taojingame.com/stararc/alpha2/info/project.manifest',
+//    'remoteVersionUrl': 'http://stararcpatch.taojingame.com/stararc/alpha2/info/version.manifest',
+//    'searchPaths': [
+//        'update0000g/'
+//    ],
+//    'svnVersion': '103268',
+//    'version': '1.0.19'
+//}
+//";
 
 
-        [UnityEditor.MenuItem("TJ/Test")]
-        static void Test()
-        {
-            var m = new ManifestData
-            {
-                version = "2.0",
-                assets = new Dictionary<string, ManifestAsset> {
-                    { "xxxx.zip", new ManifestAsset {
-                            md5 = "111",
-                            compressed = true,
-                            size = 3332,
-                        }
-                    },
-                },
-            };
+//        [UnityEditor.MenuItem("TJ/Test")]
+//        static void Test()
+//        {
+//            var m = new ManifestData
+//            {
+//                version = "2.0",
+//                assets = new Dictionary<string, ManifestAsset> {
+//                    { "xxxx.zip", new ManifestAsset {
+//                            md5 = "111",
+//                            compressed = true,
+//                            size = 3332,
+//                        }
+//                    },
+//                },
+//            };
 
-            string json = JsonConvert.SerializeObject(m, Formatting.Indented);
-            //Debug.Log(json);
+//            string json = JsonConvert.SerializeObject(m, Formatting.Indented);
+//            //Debug.Log(json);
 
-            var m1 = JsonConvert.DeserializeObject<ManifestData>(Text, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate });
-            Debug.Log(m1);
-            Debug.Log(m1.version);
-            //Debug.Log(m1.temp);
-            Debug.Log(JsonConvert.SerializeObject(m1, Formatting.Indented));
+//            var m1 = JsonConvert.DeserializeObject<ManifestData>(Text, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate });
+//            Debug.Log(m1);
+//            Debug.Log(m1.version);
+//            //Debug.Log(m1.temp);
+//            Debug.Log(JsonConvert.SerializeObject(m1, Formatting.Indented));
 
-            //Debug.Log(Path.GetDirectoryName("http://stararcpatch.taojingame.com/stararc/alpha2/info/project.manifest"));
-            //Debug.Log(Manifest.cmpVersion("3.4.3", "3.4"));
+//            //Debug.Log(Path.GetDirectoryName("http://stararcpatch.taojingame.com/stararc/alpha2/info/project.manifest"));
+//            //Debug.Log(Manifest.cmpVersion("3.4.3", "3.4"));
 
-            //var ma = new ManifestAsset
-            //{
-            //    md5 = "sss",
-            //};
+//            //var ma = new ManifestAsset
+//            //{
+//            //    md5 = "sss",
+//            //};
 
-            //var mb = ma.Clone();
+//            //var mb = ma.Clone();
 
-            Debug.Log(Path.IsPathRooted("cusr"));
-            Debug.Log(Path.Combine("c:\\sss", "D:\\aaa"));
-        }
+//            Debug.Log(Path.IsPathRooted("cusr"));
+//            Debug.Log(Path.Combine("c:\\sss", "D:\\aaa"));
+//        }
 
-    }
+//    }
 
 }

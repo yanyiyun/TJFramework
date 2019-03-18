@@ -220,7 +220,18 @@ namespace TJ
             }
             else
             {
-                return new AssetBundleAssetLoadRequest(LoadBundleAsync(bundleName) as AssetBundleLoaderLoadRequest, assetName, type);
+                if (IsLoadAssetAsyncButBundleSync)
+                {
+                    var bundle = LoadBundle(bundleName) as AssetBundleBundle;
+                    if (bundle != null)
+                        return new AssetBundleAssetLoadRequest(bundle, assetName, type);
+                    else
+                        return new AssetBundleAssetLoadRequest();   //fail
+                }
+                else
+                {
+                    return new AssetBundleAssetLoadRequest(LoadBundleAsync(bundleName) as AssetBundleLoaderLoadRequest, assetName, type);
+                }
             }
         }
 
@@ -253,7 +264,7 @@ namespace TJ
 
 
             loader = LoadBundleAndDepImpl(bundleName, hold);
-            return loader != null ? loader.bundle : null; ;
+            return loader?.bundle;
         }
 
 
