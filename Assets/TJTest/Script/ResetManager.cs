@@ -49,7 +49,7 @@ public class ResetManager : Singleton<ResetManager>, IDisposable
         //如果是自己的代码. 则无所谓
 
 
-        LuaManager.Instance.SafeCallFuncEngineReset();
+        LuaManager.Instance.SafeCallEngineBeforeDispose();
 
 
         LuaManager.DoDispose();

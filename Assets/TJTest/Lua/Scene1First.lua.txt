@@ -1,0 +1,7 @@
+
+require("init")
+
+return function()
+    local go = CS.UnityEngine.GameObject.Find("Canvas")
+    LBehaviourBind(go, require("Scene1"), CS.TJ.LBehaviour)
+end

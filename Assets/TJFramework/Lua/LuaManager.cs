@@ -60,14 +60,14 @@ namespace TJ
 
 
         //游戏被重置时调用
-        public LuaFunction funcEngineReset;
-        public void SafeCallFuncEngineReset()
+        public LuaFunction funcEngineBeforeDispose;
+        public void SafeCallEngineBeforeDispose()
         {
-            if (funcEngineReset != null)
+            if (funcEngineBeforeDispose != null)
             {
                 try
                 {
-                    funcEngineReset.Action();
+                    funcEngineBeforeDispose.Action();
                 }
                 catch (Exception e)
                 {
@@ -97,7 +97,7 @@ namespace TJ
 
         public void Dispose()
         {
-            funcEngineReset = null;
+            funcEngineBeforeDispose = null;
 
             //在没有清除所有Delegate时, 会抛出异常.
             luaenv.Dispose();

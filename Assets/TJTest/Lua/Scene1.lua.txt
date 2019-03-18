@@ -6,6 +6,12 @@ return function ()
         num = 0,
 
         OnBind = function(self)
+            -- 演示手动持有当前的场景包
+            local scenename = CS.UnityEngine.SceneManagement.SceneManager.GetActiveScene().path
+            local bname = CS.TJ.BundleManager.Instance:AssetBundleName(scenename)
+            local bundle = CS.TJ.BundleManager.Instance:LoadBundle(bname)
+            CS.TJ.BundleManager.Instance:SetBundleHold(bundle, true)
+
             self.btnAddOne = self.comp.transform:Find("btnAddOne")
             local btnComp = self.btnAddOne:GetComponent(typeof(CS.UnityEngine.UI.Button))
             btnComp.onClick:AddListener(function()

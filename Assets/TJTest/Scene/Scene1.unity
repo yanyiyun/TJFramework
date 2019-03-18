@@ -489,7 +489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc44a1fc048ffb4fb56dbe592b04e90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  awakeScript: require("Main")()
+  awakeScript: require("Scene1First")()
   startScript: 
 --- !u!1 &739551492
 GameObject:

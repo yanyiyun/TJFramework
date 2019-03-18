@@ -17,28 +17,26 @@ namespace TJ
             luaInst.Get("LateUpdate", out cbLateUpdate);
         }
 
-        protected override void Clear()
+        protected override void UnbindAction()
         {
             cbUpdate = null;
             cbFixedUpdate = null;
             cbLateUpdate = null;
-
-            base.Clear();
         }
 
         void Update()
         {
-            if (cbUpdate != null) cbUpdate(luaInst);
+            SafeCallLua(cbUpdate, luaInst);
         }
 
         void FixedUpdate()
         {
-            if (cbFixedUpdate != null) cbFixedUpdate(luaInst);
+            SafeCallLua(cbFixedUpdate, luaInst);
         }
 
         void LateUpdate()
         {
-            if (cbLateUpdate != null) cbLateUpdate(luaInst);
+            SafeCallLua(cbLateUpdate, luaInst);
         }
     }
 }

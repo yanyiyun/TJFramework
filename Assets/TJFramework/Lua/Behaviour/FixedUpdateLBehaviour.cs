@@ -13,16 +13,14 @@ namespace TJ
             luaInst.Get("FixedUpdate", out cbFixedUpdate);
         }
 
-        protected override void Clear()
+        protected override void UnbindAction()
         {
             cbFixedUpdate = null;
-
-            base.Clear();
         }
 
         void FixedUpdate()
         {
-            if (cbFixedUpdate != null) cbFixedUpdate(luaInst);
+            SafeCallLua(cbFixedUpdate, luaInst);
         }
     }
 }

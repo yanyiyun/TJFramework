@@ -15,23 +15,21 @@ namespace TJ
             luaInst.Get("OnEnable", out cbOnEnable);
         }
 
-        protected override void Clear()
+        protected override void UnbindAction()
         {
             cbOnDisable = null;
             cbOnEnable = null;
-
-            base.Clear();
         }
 
 
         void OnDisable()
         {
-            if (cbOnDisable != null) cbOnDisable(luaInst);
+            SafeCallLua(cbOnDisable, luaInst);
         }
 
         void OnEnable()
         {
-            if (cbOnEnable != null) cbOnEnable(luaInst);
+            SafeCallLua(cbOnEnable, luaInst);
         }
     }
 }
