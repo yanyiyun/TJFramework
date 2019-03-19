@@ -6,17 +6,19 @@ using XLua;
 
 namespace TJ
 {
-    public class LuaManager : Singleton<LuaManager>, IDisposable
+    public partial class LuaManager : Singleton<LuaManager>, IDisposable
     {
         //Lua初始化时的搜索目录
         public static string[] InitSearchPaths = {""};
 
         LuaEnv luaenv;
         List<string> searchPaths;
+        Dictionary<string, LuaFunction> lfuncs = new Dictionary<string, LuaFunction>();
 
         public LuaEnv LuaEnv { get { return luaenv; } }
 
-        //TODO: 搜索规则描述
+        //搜索路径数组
+        //排在前面的路径优先匹配, 知道匹配到资源停止
         public List<string> SearchPaths
         {
             get
@@ -59,22 +61,24 @@ namespace TJ
         }
 
 
-        //游戏被重置时调用
-        public LuaFunction funcEngineBeforeDispose;
-        public void SafeCallEngineBeforeDispose()
+
+        public void AddLuaFunction(string name, LuaFunction lfunc)
         {
-            if (funcEngineBeforeDispose != null)
-            {
-                try
-                {
-                    funcEngineBeforeDispose.Action();
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e);
-                }
-            }
+            lfuncs[name] = lfunc;
         }
+
+        public void RemoveLuaFunction(string name)
+        {
+            lfuncs.Remove(name);
+        }
+
+        public LuaFunction GetLuaFunction(string name)
+        {
+            LuaFunction lfunc = null;
+            lfuncs.TryGetValue(name, out lfunc);
+            return lfunc;
+        }
+
 
 
         void Awake()
@@ -97,7 +101,7 @@ namespace TJ
 
         public void Dispose()
         {
-            funcEngineBeforeDispose = null;
+            lfuncs.Clear();
 
             //在没有清除所有Delegate时, 会抛出异常.
             luaenv.Dispose();

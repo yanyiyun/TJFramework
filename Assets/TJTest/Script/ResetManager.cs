@@ -48,8 +48,19 @@ public class ResetManager : Singleton<ResetManager>, IDisposable
         //TODO: 需要增加event, 需要4个事件. event不能是lua的回调, 因为LuaManager理应被Reset
         //如果是自己的代码. 则无所谓
 
+        var lfunc = LuaManager.Instance.GetLuaFunction("EngineBeforeDispose");
+        if (lfunc != null)
+        {
+            try
+            {
+                lfunc.Action();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
 
-        LuaManager.Instance.SafeCallEngineBeforeDispose();
 
 
         LuaManager.DoDispose();

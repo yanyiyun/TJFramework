@@ -131,8 +131,7 @@ namespace TJ
             return false;
         }
 
-        //-----------------------
-        public void SetAsset(Object rawseet)
+        internal void SetAsset(Object rawseet)
         {
             asset = rawseet;
         }

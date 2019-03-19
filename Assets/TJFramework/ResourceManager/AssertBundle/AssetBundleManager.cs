@@ -38,13 +38,11 @@ namespace TJ
             return true;
         }
 
-        /// <summary>
-        /// 清理所有资源. 这应该只在热更新结束后才会调用.
-        /// 因为又很多副作用. 
-        /// 完整的资源清理.
-        /// 如果有异步加载中的AssetBundle, 后续会出错
-        /// 如果有异步加载中的Asset, 后续会出错.
-        /// </summary>
+        // 清理所有资源. 这应该只在热更新结束后才会调用.
+        // 因为又很多副作用. 
+        // 完整的资源清理.
+        // 如果有异步加载中的AssetBundle, 后续会出错
+        // 如果有异步加载中的Asset, 后续会出错.
         public override void Dispose()
         {
             this.StopAllCoroutines();
@@ -400,6 +398,7 @@ namespace TJ
         }
 
 
+        //设置由此Manager持有对应的bundle.
         public override void SetBundleHold(Bundle bundle, bool hold)
         {
             var bundleName = bundle.BundleName;

@@ -9,6 +9,8 @@ MonoBehaviour和luaInst通过LBehaviour桥接, 实现MonoBehaviour的消息可�
 无法实现Awake消息
 增加OnBind的消息
 
+luaInst.comp会被设置为指定的LBehaviour
+
 参数说明:
 gameObject: CS.UnityEngine.GameObject
 luaInstOrOther: 普通talbe, 直接使用. 类, 使用new()或New()返回值. 函数, 使用func()返回值
@@ -37,9 +39,10 @@ _G["LBehaviourBind"] = LBehaviourBind
 
 
 -- 引擎Dispose前的回调
-CS.TJ.LuaManager.Instance.funcEngineBeforeDispose = function ()
+CS.TJ.LuaManager.Instance:AddLuaFunction("EngineBeforeDispose",
+function ()
     print("call lua funcEngineBeforeDispose")
-end
+end)
 
 
 --[[
