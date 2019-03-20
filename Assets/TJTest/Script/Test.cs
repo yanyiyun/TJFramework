@@ -92,10 +92,15 @@ public class Test : MonoBehaviour {
         //req.Asset.Instantiate();
 
 
-        //var req = mgr.LoadAssetAsync("assets/tjframework/test/cylinder.prefab");
+        //var req = TJ.BundleManager.Instance.LoadAssetAsync("assets/tjtest/cylinder.prefab");
         //yield return req;
         //var asset = req.Asset;
-        //asset.Instantiate();
+        //var go  = asset.Instantiate();
+        //object goobj = go;
+        //Destroy(go);
+        //yield return null;
+        //Debug.Log("go: " + (go == null));
+        //Debug.Log("goobj: " + (goobj == null));
 
         //yield return null;
         //System.GC.Collect();

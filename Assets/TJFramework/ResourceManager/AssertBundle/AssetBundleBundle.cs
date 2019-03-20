@@ -41,7 +41,7 @@ namespace TJ
         }
 
 
-        public void Dispose(bool unloadAllLoadedObjects)
+        internal void Dispose(bool unloadAllLoadedObjects)
         {
             if (IsDispose)
                 return;

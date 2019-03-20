@@ -6,6 +6,33 @@ using System;
 using Object = UnityEngine.Object;
 
 
+/*
+    AssetBundleManager的资源持有机制
+    基于AssetBundleManager管理的的资源卸载基本不需要手动管理, 只要遵循简单的规则. 
+    在适当的时机调用BundleManager.Instance.UnloadUnusedBundles(false); 移除不在标记是用的包
+
+    以下规则标记包无法被移除
+    1. 持有AssetBundleAsset对象
+    2. 持有AssetBundleAsset.Instantiate方法的返回对象gameobject
+    3. 调用AssetBundleBundle.Hold(owner), 且owner没有destroy. 
+    4. 调用BundleManager.Instance.SetBundleHold(bundle, true); 让BundleManager持有包
+    5. 调用BundleManager.Instance.LoadBundle(bundleName, true), 第二个参数为true
+    6. 调用BundleManager.Instance.LoadBundleAsync(bundleName, true), 第二个参数为true
+
+    以下规则会解除标记
+    1. AssetBundleAsset对象被垃圾回收
+    2. gameobject被destroy, 或者被垃圾回收
+    3. owner被destroy, 或者被垃圾回收. 或者手动调用AssetBundleBundle.Return(owner)
+    4,5,6. 调用BundleManager.Instance.SetBundleHold(bundle, false);
+
+
+    Bunlde释放被引用的管理. 基于以下3点实现. 具体看AssetBundleBundle.IsUnused的属性实现
+    1. 包的依赖引用计数
+    2. AssetBundleAsset的弱引用
+    3. UnityEngine.Object的弱引用
+*/
+
+
 namespace TJ
 {
 
@@ -416,10 +443,10 @@ namespace TJ
         }
 
 
-        //移除无用的Bundle. 就是没有被引用的
-        //这个函数和Resources.UnloadUnusedAssets();配合使用, 效果更佳哦
+        //移除不再被使用的Bundle.
         public override void UnloadUnusedBundles(bool unloadAllLoadedObjects)
         {
+            bool done = false;
             bool hasUnusedBundle = false;
             do
             {
@@ -436,10 +463,14 @@ namespace TJ
                 {
                     loaders[key].bundle.Dispose(unloadAllLoadedObjects);
                     loaders.Remove(key);
+                    done = true;
                 }
                 hasUnusedBundle = movekeys.Count != 0;
             }
             while (hasUnusedBundle);
+
+            if (done && unloadAllLoadedObjects == false)
+                Resources.UnloadUnusedAssets();
         }
 
 

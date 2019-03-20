@@ -83,10 +83,7 @@ namespace TJ
         //    Bundle.Return(owner);
         //}
 
-        /// <summary>
-        /// 真正的资源. 以这种方式获取的资源不会触发弱引用记录. 
-        /// 当然, 只要保持AssetBundleAsset, 就能保持这个真正的资源. 就算不保持AssetBundleAsset, 只要不是UnloadUnusedBundles(true), 这个只要还是可以正常工作
-        /// </summary>
+        //以此方式获得的资源, 需要留意 BundleManager.Instance.UnloadUnusedBundles(true); 如果移除所属的包, 会资源无效
         public override Object RawAsset
         {
             get

@@ -26,9 +26,7 @@ namespace TJ
         public AssetBundle assetBundleCache;
         public AssetBundleBundle bundle;
 
-        /// <summary>
-        /// 加载完成回调. 依赖加载完成. 参数bool表示是否错误, 必须依赖和自身都没问题才没错误
-        /// </summary>
+        //加载完成回调. 依赖加载完成. 参数bool表示是否错误, 必须依赖和自身都没问题才没错误
         public event Action<bool> OnComplete;
 
 
