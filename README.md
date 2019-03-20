@@ -23,4 +23,5 @@ TJ/Mode/Extern Lua Mode, lua代码文件直接从Assets目录读取, 方便程�
 点击菜单 TJ/Build AssetBundles 打包.  
 规则描述: Assets/TJFramework/AssetBundleBuilder/BuildRuleTemplate.json
 
-## 资源自动管理的原理说明, 查看AssetBundleManager.cs文件  
+## 资源自动管理的原理
+查看AssetBundleManager.cs文件  
