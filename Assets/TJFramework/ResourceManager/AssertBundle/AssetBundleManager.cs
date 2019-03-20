@@ -22,7 +22,7 @@ using Object = UnityEngine.Object;
     以下规则会解除标记
     1. AssetBundleAsset对象被垃圾回收
     2. gameobject被destroy, 或者被垃圾回收
-    3. owner被destroy, 或者被垃圾回收. 或者手动调用AssetBundleBundle.Return(owner)
+    3. owner被destroy, 或者被垃圾回收. 或者调用AssetBundleBundle.Return(owner)
     4,5,6. 调用BundleManager.Instance.SetBundleHold(bundle, false);
 
 
@@ -36,10 +36,6 @@ using Object = UnityEngine.Object;
 namespace TJ
 {
 
-    /// <summary>
-    /// 注意:
-    /// AssetBunlde同步和异步加载无法并行. 但是AssetBundle里面的至于加载是可以同步和异步并行的
-    /// </summary>
     public class AssetBundleManager : BundleManager
     {
         AssetBundleManifest manifest;
@@ -65,11 +61,10 @@ namespace TJ
             return true;
         }
 
-        // 清理所有资源. 这应该只在热更新结束后才会调用.
-        // 因为又很多副作用. 
-        // 完整的资源清理.
-        // 如果有异步加载中的AssetBundle, 后续会出错
-        // 如果有异步加载中的Asset, 后续会出错.
+        //完整的资源清理.
+        //如果有异步加载中的AssetBundle, 后续会出错
+        //如果有异步加载中的Asset, 后续会出错.
+        //清理所有资源. 这应该只在热更新结束后才会调用.
         public override void Dispose()
         {
             this.StopAllCoroutines();
@@ -179,6 +174,7 @@ namespace TJ
             return Path.Combine(ResourceUtils.AssetBundleFolder, path);
         }
 
+        //assetName的路径必须以/分隔
         public override bool AssetExists(string assetName)
         {
             return AssetBundleName(assetName) != null;
@@ -261,6 +257,8 @@ namespace TJ
         }
 
 
+        //bundleName: 必须全部小写, 且以/分隔
+        //hold: bundle为管理持有, 防止被标记为未使用
         public override Bundle LoadBundle(string bundleName, bool hold = false)
         {
 #if DEBUG

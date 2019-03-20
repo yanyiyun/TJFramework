@@ -42,7 +42,7 @@ return function ()
             local btnComp = self.btnResetGame:GetComponent(typeof(CS.UnityEngine.UI.Button))
             btnComp.onClick:AddListener(function()
                 print("reset game")
-                CS.ResetManager.Instance:Reset()
+                CS.EngineResetManager.Instance:Reset()
             end)
         end,
 

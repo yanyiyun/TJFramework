@@ -122,11 +122,9 @@ namespace TJ
             CheckComplete();
         }
 
-        /// <summary>
-        /// 是否已经完成. 包括自身加载完毕, 且等待依赖也加载完毕.
-        /// 如果加载成功. state == State.Complete  同时  bundle有值
-        /// 加载失败. state == State.Error 同时 bundle == null
-        /// </summary>
+        //是否已经完成. 包括自身加载完毕, 且等待依赖也加载完毕.
+        //如果加载成功. state == State.Complete  同时  bundle有值
+        //加载失败. state == State.Error 同时 bundle == null
         public bool IsComplete
         {
             get

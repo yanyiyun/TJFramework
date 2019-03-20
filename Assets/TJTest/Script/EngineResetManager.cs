@@ -4,35 +4,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TJ;
+using System.Collections;
 
-
-//TODO: 这个可以改成热更新的实例代码, 而不属于框架部分. 毕竟这个定制性很强
-//这个不用写成manager
-//可以改成一个factory生成的普通类. 执行完成后, 也把自己移除了.
-public class ResetManager : Singleton<ResetManager>, IDisposable
+public class EngineResetManager : Singleton<EngineResetManager>, IDisposable
 {
-    public string resetSceneName;
-
     bool doing = false;
 
     public void Dispose()
     {
     }
 
-    public bool CanReset()
-    {
-        if (!BundleManager.Instance.CanDispose())
-            return false;
-
-        return true;
-    }
 
     public void Reset()
     {
         if (doing)
             return;
 
+        StartCoroutine(Reseting());
+    }
+
+    IEnumerator Reseting()
+    {
         doing = true;
+
+        if (!BundleManager.Instance.CanDispose())
+            yield return null;
+
         SceneManager.sceneUnloaded += OnSceneUnloaded;
 
         //第0个场景认为不被热更新影响的启动场景.
@@ -41,13 +38,13 @@ public class ResetManager : Singleton<ResetManager>, IDisposable
 
     private void OnSceneUnloaded(Scene current)
     {
+        //注销回调
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
 
         //TODO: Object Pool, timer or something
 
-        //TODO: 需要增加event, 需要4个事件. event不能是lua的回调, 因为LuaManager理应被Reset
-        //如果是自己的代码. 则无所谓
 
+        //通知lua
         var lfunc = LuaManager.Instance.GetLuaFunction("EngineBeforeDispose");
         if (lfunc != null)
         {
@@ -62,14 +59,16 @@ public class ResetManager : Singleton<ResetManager>, IDisposable
         }
 
 
-
+        //清理单件
         LuaManager.DoDispose();
         BundleManager.DoDispose();
 
 
+        //
         doing = false;
+        //自己最后清理
+        EngineResetManager.DoDispose();
 
-        ResetManager.DoDispose();   //TODO:不要这么写
 
         Debug.Log("Engine Reset Success!");
     }

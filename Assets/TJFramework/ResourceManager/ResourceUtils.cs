@@ -8,9 +8,7 @@ namespace TJ
     //TODO: 非编辑器模式还没测试过
     public static class ResourceUtils
     {
-        /// <summary>
-        /// 热更新目录名
-        /// </summary>
+        //热更新目录名
         public static string HotUpdateFolder = "hotupdate";
         public static string HotUpdatePath { get { return Path.Combine(Application.persistentDataPath, HotUpdateFolder); } }
 

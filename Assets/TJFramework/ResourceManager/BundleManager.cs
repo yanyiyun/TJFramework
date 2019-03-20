@@ -16,6 +16,7 @@ namespace TJ
         public abstract Asset LoadAsset(string assetName);
         public abstract Asset LoadAsset(string assetName, Type type);
         //LoadAssetAsync方法执行使用同步的LoadBundle方法
+        //对于同一个AssetBunlde, 无法先执行异步的AssetBundle.LoadFromFileAsync, 再执行同步的AssetBundle.LoadFromFile, 所以提供提供此配置
         public bool IsLoadAssetAsyncButBundleSync { get; set; } = false;
         public abstract AssetLoadRequest LoadAssetAsync(string assetName);
         public abstract AssetLoadRequest LoadAssetAsync(string assetName, Type type);

@@ -104,7 +104,7 @@ namespace TJ
                 asset = wr.Target as AssetBundleAsset;
                 if (asset != null)
                 {
-                    //强行更新资源. 一般来说, 资源应该是一样的. 但是难保旧的资源被destroy.
+                    //强行更新资源. 一般来说, 资源应该是一样的.
                     asset.SetAsset(rawasset);
                     return asset;
                 }
@@ -163,9 +163,7 @@ namespace TJ
             return references.Count + assetReferences.Count;
         }
 
-        /// <summary>
-        /// 是否无用了, 就是没有被引用
-        /// </summary>
+        //释放没有被使用
         public bool IsUnused
         {
             get { return depRefCount <= 0 && asyncCount <= 0 && UpdateReference() == 0; }
