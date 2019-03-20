@@ -18,6 +18,8 @@
 TJ/Mode/Simulation Mode, 资源直接从Assets目录读取, 而不是从AssetBundle读取  
 TJ/Mode/Extern Lua Mode, lua代码文件直接从Assets目录读取, 方便程序开发  
 
+TJTest项目, 演示框架运作的一般流程.
+
 ## AssetBundle打包
 打开Assets/TJFramework/Config.cs, 配置AssetBundleBuildRulePath字段, 修改指定的打包规则.  
 点击菜单 TJ/Build AssetBundles 打包.  
