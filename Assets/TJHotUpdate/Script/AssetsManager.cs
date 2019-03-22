@@ -12,5 +12,16 @@ namespace HotUpdate
         public const string TEMP_PACKAGE_SUFFIX = "_temp";
         public const string MANIFEST_FILENAME = "project.manifest";
 
+
+        public AssetsManager(string manifestUrl, string storagePath)
+        {
+            init(manifestUrl, storagePath);
+        }
+
+        
+        void init(string manifestUrl, string storagePath)
+        {
+
+        }
     }
 }

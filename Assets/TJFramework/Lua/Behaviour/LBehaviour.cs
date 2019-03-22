@@ -48,7 +48,7 @@ namespace TJ
             cbOnDestroy = null;
 
             luaInst.Set<string, object>("comp", null);
-
+            luaInst.Dispose();
             luaInst = null;
         }
 

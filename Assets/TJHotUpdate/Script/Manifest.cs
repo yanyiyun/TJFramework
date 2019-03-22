@@ -23,9 +23,9 @@ namespace HotUpdate
     {
         [DefaultValue("")]
         public string md5 { get; set; }
-        public bool compressed { get; set; }
+        public bool compressed { get; set; }    //TODO:可能不是必要字段
         public long size { get; set; }
-        public Manifest.DownloadState downloadState { get; set; }
+        public Manifest.DownloadState downloadState { get; set; }   //TODO:可能不是必要字段
         [JsonIgnore]
         public string path { get; set; }
 
@@ -49,7 +49,7 @@ namespace HotUpdate
         public string svnVersion { get; set; }
         [DefaultValue("")]
         public string version { get; set; }
-        public bool updating { get; set; }
+        public bool updating { get; set; }      //TODO:可能不是必要字段
     }
 
     public class Manifest

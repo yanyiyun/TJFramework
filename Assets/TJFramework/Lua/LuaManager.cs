@@ -64,12 +64,18 @@ namespace TJ
 
         public void AddLuaFunction(string name, LuaFunction lfunc)
         {
+            RemoveLuaFunction(name);
             lfuncs[name] = lfunc;
         }
 
         public void RemoveLuaFunction(string name)
         {
-            lfuncs.Remove(name);
+            LuaFunction lfunc;
+            if (lfuncs.TryGetValue(name, out lfunc))
+            {
+                lfuncs.Remove(name);
+                lfunc.Dispose();
+            }
         }
 
         public LuaFunction GetLuaFunction(string name)

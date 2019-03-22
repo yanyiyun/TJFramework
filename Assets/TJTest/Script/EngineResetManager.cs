@@ -8,6 +8,8 @@ using System.Collections;
 
 public class EngineResetManager : Singleton<EngineResetManager>, IDisposable
 {
+    public static int resetSceneIndex = 0;
+
     bool doing = false;
 
     public void Dispose()
@@ -32,8 +34,7 @@ public class EngineResetManager : Singleton<EngineResetManager>, IDisposable
 
         SceneManager.sceneUnloaded += OnSceneUnloaded;
 
-        //第0个场景认为不被热更新影响的启动场景.
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(resetSceneIndex);
     }
 
     private void OnSceneUnloaded(Scene current)
