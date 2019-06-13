@@ -89,10 +89,8 @@ namespace TJ
         /// <returns></returns>
         public static bool IsStreamingAssetsExists(string path)
         {
-#if TODO_ANDROID
             if (Application.platform == RuntimePlatform.Android)
                 return KEngineAndroidPlugin.IsAssetExists(path);
-#endif
 
             var fullPath = Path.Combine(Application.streamingAssetsPath, path);
             return File.Exists(fullPath);
@@ -108,10 +106,8 @@ namespace TJ
             if (!IsStreamingAssetsExists(path))
                 throw new Exception("Not exist StreamingAssets path: " + path);
 
-#if TODO_ANDROID
             if (Application.platform == RuntimePlatform.Android)
                 return KEngineAndroidPlugin.GetAssetBytes(path);
-#endif
 
             var fullPath = Path.Combine(Application.streamingAssetsPath, path);
             return File.ReadAllBytes(fullPath);
