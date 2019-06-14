@@ -9,7 +9,8 @@ return function ()
         -- 第一个参数比如是self, 就是inst自身
         OnBind = function(self)
             -- 演示手动持有当前的场景包
-            local scenename = CS.UnityEngine.SceneManagement.SceneManager.GetActiveScene().path
+            -- local scenename = CS.UnityEngine.SceneManagement.SceneManager.GetActiveScene().path  -- 这个指在ios下是空的
+            local scenename = "Assets/TJTest/Scene/Scene1.unity";
             local bname = CS.TJ.BundleManager.Instance:AssetBundleName(scenename)
             local bundle = CS.TJ.BundleManager.Instance:LoadBundle(bname)
             CS.TJ.BundleManager.Instance:SetBundleHold(bundle, true)
@@ -32,7 +33,8 @@ return function ()
                     local bname = CS.TJ.BundleManager.Instance:AssetBundleName(scenename)
                     local req = CS.TJ.BundleManager.Instance:LoadBundleAsync(bname, true);
                     coroutine.yield(req)
-                    local req1 = CS.UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenename);
+                    -- 必须加上LoadSceneMode.Single, 否则ios下会提示参数错误
+                    local req1 = CS.UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenename, CS.UnityEngine.SceneManagement.LoadSceneMode.Single);
                     -- coroutine.yield(req1)    -- 此指令的后续无法执行
                 end))
             end)
