@@ -9,6 +9,7 @@ namespace TJ
         Object asset;
         AssetBundleBundle bundle;
 
+        //可能重名也可能不准确, 此名字只做调试用
         public override string AssetName { get; protected set; }
 
 

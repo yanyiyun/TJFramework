@@ -12,7 +12,9 @@ namespace TJ
     {
         readonly string assetName;
         readonly Type type;
+        readonly int mode;
         AssetBundleAsset asset;
+        AssetBundleAsset[] allAssets;
         bool complete = false;
         AssetBundleLoaderLoadRequest abllr;
 
@@ -25,11 +27,19 @@ namespace TJ
             }
         }
 
+        public override Asset[] AllAssets
+        {
+            get
+            {
+                return allAssets;
+            }
+        }
 
-        public AssetBundleAssetLoadRequest(AssetBundleBundle bundle, string assetName, Type type)
+        public AssetBundleAssetLoadRequest(AssetBundleBundle bundle, string assetName, Type type, int mode)
         {
             this.assetName = assetName;
             this.type = type;
+            this.mode = mode;
             LoadAsset(bundle);
         }
 
@@ -39,11 +49,12 @@ namespace TJ
             complete = true;
         }
 
-        public AssetBundleAssetLoadRequest(AssetBundleLoaderLoadRequest abllr, string assetName, Type type)
+        public AssetBundleAssetLoadRequest(AssetBundleLoaderLoadRequest abllr, string assetName, Type type, int mode)
         {
             this.abllr = abllr;
             this.assetName = assetName;
             this.type = type;
+            this.mode = mode;
         }
 
         public override bool keepWaiting
@@ -81,12 +92,17 @@ namespace TJ
         //------------------------
         void LoadAsset(AssetBundleBundle bundle)
         {
-            AssetBundleManager.Instance.StartCoroutine(bundle.LoadAssetAsyncImpl(assetName, type, this));
+            AssetBundleManager.Instance.StartCoroutine(bundle.LoadAssetAsyncImpl(assetName, type, this, mode));
         }
 
         public void SetAsset(AssetBundleAsset asset)
         {
             this.asset = asset;
+        }
+
+        public void SetAllAssets(AssetBundleAsset[] allAssets)
+        {
+            this.allAssets = allAssets;
         }
 
         public void SetComplete()

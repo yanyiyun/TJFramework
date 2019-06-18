@@ -56,6 +56,21 @@ return function ()
                 local asset = req.Asset
                 asset:Instantiate()
             end))
+
+            -- 测试LoadAssetWithSubAssets
+            -- local sprites = CS.TJ.BundleManager.Instance:LoadAssetWithSubAssets("Assets/TJTest/Materials/upgrade.png");
+            -- print(sprites)
+            -- for i = 0, sprites.Length - 1 do
+            --     print(sprites[i])
+            -- end
+            self.comp:StartCoroutine(util.cs_generator(function()
+                local req = CS.TJ.BundleManager.Instance:LoadAssetWithSubAssetsAsync("Assets/TJTest/Materials/upgrade.png")
+                coroutine.yield(req)
+                local AllAssets = req.AllAssets
+                for i = 0, AllAssets.Length - 1 do
+                    print(AllAssets[i])
+                end
+            end))
         end,
 
         OnDestroy = function(self)

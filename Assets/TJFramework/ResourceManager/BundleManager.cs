@@ -15,11 +15,15 @@ namespace TJ
         public abstract string AssetBundleName(string assetName);
         public abstract Asset LoadAsset(string assetName);
         public abstract Asset LoadAsset(string assetName, Type type);
+        public abstract Asset[] LoadAssetWithSubAssets(string assetName);
+        public abstract Asset[] LoadAssetWithSubAssets(string assetName, Type type);
         //LoadAssetAsync方法执行使用同步的LoadBundle方法
         //对于同一个AssetBunlde, 无法先执行异步的AssetBundle.LoadFromFileAsync, 再执行同步的AssetBundle.LoadFromFile, 所以提供提供此配置
         public bool IsLoadAssetAsyncButBundleSync { get; set; } = false;
         public abstract AssetLoadRequest LoadAssetAsync(string assetName);
         public abstract AssetLoadRequest LoadAssetAsync(string assetName, Type type);
+        public abstract AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName);
+        public abstract AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName, Type type);
         public abstract Bundle LoadBundle(string bundleName, bool hold = false);
         public abstract LoaderLoadRequest LoadBundleAsync(string bundleName, bool hold = false);
         public abstract void SetBundleHold(Bundle bundle, bool hold);

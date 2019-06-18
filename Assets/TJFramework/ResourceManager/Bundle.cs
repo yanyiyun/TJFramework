@@ -11,7 +11,11 @@ namespace TJ
         public abstract void Return(Object owner);
         public abstract Asset LoadAsset(string assetName);
         public abstract Asset LoadAsset(string assetName, Type type);
+        public abstract Asset[] LoadAssetWithSubAssets(string assetName);
+        public abstract Asset[] LoadAssetWithSubAssets(string assetName, Type type);
         public abstract AssetLoadRequest LoadAssetAsync(string assetName);
         public abstract AssetLoadRequest LoadAssetAsync(string assetName, Type type);
+        public abstract AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName);
+        public abstract AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName, Type type);
     }
 }

@@ -50,6 +50,25 @@ namespace TJ
             return new SimulateAsset(rawasset, assetName, bundle);
         }
 
+        public override Asset[] LoadAssetWithSubAssets(string assetName)
+        {
+            return LoadAssetWithSubAssets(assetName, typeof(Object));
+        }
+
+        public override Asset[] LoadAssetWithSubAssets(string assetName, Type type)
+        {
+            Object[] rawassets = AssetDatabase.LoadAllAssetsAtPath(assetName);
+            string bundleName = ResourceUtils.ConvertToABName(assetName) + ".ab";
+            SimulateBundle bundle = LoadBundle(bundleName) as SimulateBundle;
+            List<Asset> rli = new List<Asset>();
+            foreach (var rawasset in rawassets)
+            {
+                rli.Add(new SimulateAsset(rawasset, assetName, bundle));
+            }
+
+            return rli.ToArray();
+        }
+
         public override AssetLoadRequest LoadAssetAsync(string assetName)
         {
             return LoadAssetAsync(assetName, typeof(Object));
@@ -57,15 +76,57 @@ namespace TJ
 
         public override AssetLoadRequest LoadAssetAsync(string assetName, Type type)
         {
-            Object rawasset = AssetDatabase.LoadAssetAtPath(assetName, type);
-            if (rawasset == null)
-                return new SimulateAssetLoadRequest(null);
+            return LoadAssetAsyncImpl(assetName, type, 0);
+        }
+
+        public override AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName)
+        {
+            return LoadAssetWithSubAssetsAsync(assetName, typeof(Object));
+        }
+
+        public override AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName, Type type)
+        {
+            return LoadAssetAsyncImpl(assetName, type, 1);
+        }
+
+        public AssetLoadRequest LoadAssetAsyncImpl(string assetName, Type type, int mode)
+        {
+            Object rawasset = null; ;
+            Object[] rawassets = null;
+            if (mode == 0)
+            {
+                rawasset = AssetDatabase.LoadAssetAtPath(assetName, type);
+                if (rawasset == null)
+                    return new SimulateAssetLoadRequest((SimulateAsset)null);
+            }
+            else if (mode == 1)
+            {
+                rawassets = AssetDatabase.LoadAllAssetsAtPath(assetName);
+                if (rawassets == null)
+                    return new SimulateAssetLoadRequest((SimulateAsset)null);
+            }
 
             string bundleName = ResourceUtils.ConvertToABName(assetName) + ".ab";
             SimulateBundle bundle = LoadBundle(bundleName) as SimulateBundle;
 
-            var asset =  new SimulateAsset(rawasset, assetName, bundle);
-            return new SimulateAssetLoadRequest(asset);
+            if (mode == 0)
+            {
+                var asset = new SimulateAsset(rawasset, assetName, bundle);
+                return new SimulateAssetLoadRequest(asset);
+            }
+            else if (mode == 1)
+            {
+                List<SimulateAsset> li = new List<SimulateAsset>();
+                foreach (var raw in rawassets)
+                {
+                    li.Add(new SimulateAsset(raw, assetName, bundle));
+                }
+                return new SimulateAssetLoadRequest(li.ToArray());
+            }
+            else
+            {
+                return new SimulateAssetLoadRequest((SimulateAsset)null);
+            }
         }
 
         public override Bundle LoadBundle(string bundleName, bool hold = false)

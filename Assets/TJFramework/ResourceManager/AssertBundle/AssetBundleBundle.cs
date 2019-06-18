@@ -12,7 +12,7 @@ namespace TJ
         AssetBundle assetBundle;
         HashSet<AssetBundleBundle> deps;
         Dictionary<int, WeakReference> references = new Dictionary<int, WeakReference>();
-        Dictionary<string, WeakReference> assetReferences = new Dictionary<string, WeakReference>();
+        Dictionary<int, WeakReference> assetReferences = new Dictionary<int, WeakReference>();
 
         int depRefCount = 0;    //被依赖的引用计数
         int asyncCount = 0;     //异步加载的次数
@@ -96,24 +96,26 @@ namespace TJ
 
         AssetBundleAsset CreateAsset(Object rawasset, string assetName)
         {
-            //根据名字匹配规则, 可能出现多个assetName 对应 一个rawasset的情况. 不过这没关系
+            int uid = rawasset.GetInstanceID();
+
             AssetBundleAsset asset;
             WeakReference wr;
-            if (assetReferences.TryGetValue(assetName, out wr))
+
+            if (assetReferences.TryGetValue(uid, out wr))
             {
                 asset = wr.Target as AssetBundleAsset;
                 if (asset != null)
                 {
-                    //强行更新资源. 一般来说, 资源应该是一样的.
+                    //强行更新资源.
                     asset.SetAsset(rawasset);
                     return asset;
                 }
                 else
-                    assetReferences.Remove(assetName);
+                    assetReferences.Remove(uid);    //此分支难于测试
             }
 
             asset = new AssetBundleAsset(rawasset, assetName, this);
-            assetReferences.Add(assetName, new WeakReference(asset));
+            assetReferences.Add(uid, new WeakReference(asset));
 
             return asset;
         }
@@ -146,8 +148,8 @@ namespace TJ
             }
 
             {
-                List<string> li = new List<string>();
-                foreach (KeyValuePair<string, WeakReference> pair in assetReferences)
+                List<int> li = new List<int>();
+                foreach (KeyValuePair<int, WeakReference> pair in assetReferences)
                 {
                     object o = pair.Value.Target;
                     if (o == null)
@@ -182,6 +184,22 @@ namespace TJ
             return asset != null ? CreateAsset(asset, assetName) : null;
         }
 
+        public override Asset[] LoadAssetWithSubAssets(string assetName)
+        {
+            return LoadAssetWithSubAssets(assetName, typeof(Object));
+        }
+
+        public override Asset[] LoadAssetWithSubAssets(string assetName, Type type)
+        {
+            List<Asset> rli = new List<Asset>();
+            var assets = assetBundle.LoadAssetWithSubAssets(assetName, type);
+            foreach (var asset in assets)
+            {
+                rli.Add(CreateAsset(asset, assetName));
+            }
+            return rli.ToArray();
+        }
+
         public override AssetLoadRequest LoadAssetAsync(string assetName)
         {
             return LoadAssetAsync(assetName, typeof(Object));
@@ -189,16 +207,28 @@ namespace TJ
 
         public override AssetLoadRequest LoadAssetAsync(string assetName, Type type)
         {
-            return new AssetBundleAssetLoadRequest(this, assetName, type);
+            return new AssetBundleAssetLoadRequest(this, assetName, type, 0);
         }
 
+        public override AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName)
+        {
+            return LoadAssetWithSubAssetsAsync(assetName, typeof(Object));
+        }
 
+        public override AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName, Type type)
+        {
+            return new AssetBundleAssetLoadRequest(this, assetName, type, 1);
+        }
 
         //-----------------------------------
-        public IEnumerator LoadAssetAsyncImpl(string assetName, Type type, AssetBundleAssetLoadRequest req)
+        internal IEnumerator LoadAssetAsyncImpl(string assetName, Type type, AssetBundleAssetLoadRequest req, int mode)
         {
             asyncCount++;
-            AssetBundleRequest abr = assetBundle.LoadAssetAsync(assetName, type);
+            AssetBundleRequest abr = null;
+            if (mode == 0)
+                abr = assetBundle.LoadAssetAsync(assetName, type);
+            else if (mode == 1)
+                abr = assetBundle.LoadAssetWithSubAssetsAsync(assetName, type);
             yield return abr;
             asyncCount--;
 
@@ -208,8 +238,30 @@ namespace TJ
                 Debug.LogError("AssetBundleBundle is Dispose!");
             }
 
-            if (abr.asset && !IsDispose)
-                req.SetAsset(CreateAsset(abr.asset, assetName));
+            if (!IsDispose)
+            {
+                if (mode == 0)
+                {
+                    if (abr.asset)
+                        req.SetAsset(CreateAsset(abr.asset, assetName));
+                }
+                else if (mode == 1)
+                {
+                    if (abr.asset)
+                    {
+                        req.SetAsset(CreateAsset(abr.asset, assetName));
+                    }
+                    if (abr.allAssets != null)
+                    {
+                        List<AssetBundleAsset> rli = new List<AssetBundleAsset>();
+                        foreach (var asset in abr.allAssets)
+                        {
+                            rli.Add(CreateAsset(asset, assetName));
+                        }
+                        req.SetAllAssets(rli.ToArray());
+                    }
+                }
+            }
             req.SetComplete();
         }
     }

@@ -11,6 +11,7 @@ namespace TJ
     public abstract class AssetLoadRequest : CustomYieldInstruction
     {
         public abstract Asset Asset { get; }
+        public abstract Asset[] AllAssets { get; }
     }
 
     public abstract class LoaderLoadRequest : CustomYieldInstruction

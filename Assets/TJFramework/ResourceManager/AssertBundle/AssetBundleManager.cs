@@ -212,12 +212,41 @@ namespace TJ
             return bundle.LoadAsset(assetName, type);
         }
 
+        public override Asset[] LoadAssetWithSubAssets(string assetName)
+        {
+            return LoadAssetWithSubAssets(assetName, typeof(Object));
+        }
+
+        public override Asset[] LoadAssetWithSubAssets(string assetName, Type type)
+        {
+            string bundleName = GetBundleNameFromAssetList(assetName);
+            if (bundleName == null)
+                return null;
+            var bundle = LoadBundle(bundleName);
+            return bundle.LoadAssetWithSubAssets(assetName, type);
+        }
+
         public override AssetLoadRequest LoadAssetAsync(string assetName)
         {
             return LoadAssetAsync(assetName, typeof(Object));
         }
 
         public override AssetLoadRequest LoadAssetAsync(string assetName, Type type)
+        {
+            return LoadAssetAsyncImpl(assetName, type, 0);
+        }
+
+        public override AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName)
+        {
+            return LoadAssetWithSubAssetsAsync(assetName, typeof(Object));
+        }
+
+        public override AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName, Type type)
+        {
+            return LoadAssetAsyncImpl(assetName, type, 1);
+        }
+
+        public AssetLoadRequest LoadAssetAsyncImpl(string assetName, Type type, int mode)
         {
             string bundleName = GetBundleNameFromAssetList(assetName);
             if (bundleName == null)
@@ -229,14 +258,14 @@ namespace TJ
                 if (loader.IsComplete)
                 {
                     if (loader.bundle != null)
-                        return new AssetBundleAssetLoadRequest(loader.bundle, assetName, type);
+                        return new AssetBundleAssetLoadRequest(loader.bundle, assetName, type, mode);
                     else
                         return new AssetBundleAssetLoadRequest();   //fail
                 }
                 else
                 {
                     Debug.Assert(loader.state == AssetBundleLoader.State.Loading);
-                    return new AssetBundleAssetLoadRequest(LoadBundleAsync(bundleName) as AssetBundleLoaderLoadRequest, assetName, type);
+                    return new AssetBundleAssetLoadRequest(LoadBundleAsync(bundleName) as AssetBundleLoaderLoadRequest, assetName, type, mode);
                 }
             }
             else
@@ -245,13 +274,13 @@ namespace TJ
                 {
                     var bundle = LoadBundle(bundleName) as AssetBundleBundle;
                     if (bundle != null)
-                        return new AssetBundleAssetLoadRequest(bundle, assetName, type);
+                        return new AssetBundleAssetLoadRequest(bundle, assetName, type, mode);
                     else
                         return new AssetBundleAssetLoadRequest();   //fail
                 }
                 else
                 {
-                    return new AssetBundleAssetLoadRequest(LoadBundleAsync(bundleName) as AssetBundleLoaderLoadRequest, assetName, type);
+                    return new AssetBundleAssetLoadRequest(LoadBundleAsync(bundleName) as AssetBundleLoaderLoadRequest, assetName, type, mode);
                 }
             }
         }

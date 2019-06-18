@@ -27,6 +27,16 @@ namespace TJ
             return SimulateBundleManager.Instance.LoadAsset(assetName, type);
         }
 
+        public override Asset[] LoadAssetWithSubAssets(string assetName)
+        {
+            return LoadAssetWithSubAssets(assetName, typeof(Object));
+        }
+
+        public override Asset[] LoadAssetWithSubAssets(string assetName, Type type)
+        {
+            return SimulateBundleManager.Instance.LoadAssetWithSubAssets(assetName, type);
+        }
+
         public override AssetLoadRequest LoadAssetAsync(string assetName)
         {
             return LoadAssetAsync(assetName, typeof(Object));
@@ -35,6 +45,16 @@ namespace TJ
         public override AssetLoadRequest LoadAssetAsync(string assetName, Type type)
         {
             return SimulateBundleManager.Instance.LoadAssetAsync(assetName, type);
+        }
+
+        public override AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName)
+        {
+            return LoadAssetWithSubAssetsAsync(assetName, typeof(Object));
+        }
+
+        public override AssetLoadRequest LoadAssetWithSubAssetsAsync(string assetName, Type type)
+        {
+            return SimulateBundleManager.Instance.LoadAssetWithSubAssetsAsync(assetName, type);
         }
     }
 }
