@@ -9,6 +9,7 @@
 * 在编辑器模式, 额外提供Simulation Mode, 可以不用打包也能运行.
 * 使用XLua框架. 
 * 实现LuaManager. 实现LBehaviour, 作为Lua版的MonoBehavior.
+* 支持windows, mac, ios, andriod. Unity2018.4测试通过
 
 ## 快速开始
 点击菜单TJ/Build AssetBundles,  编译AssetBundle资源.   
