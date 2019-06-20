@@ -9,6 +9,8 @@ public class LaunchScene : MonoBehaviour
 
     void Awake()
     {
+        EngineResetManager.TryDoReset();
+
         EngineResetManager.resetSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
         LuaManager.InitSearchPaths = new string[] { "Assets/TJTest/Lua" };

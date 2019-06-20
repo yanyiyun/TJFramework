@@ -10,7 +10,7 @@ public class EngineResetManager : Singleton<EngineResetManager>, IDisposable
 {
     public static int resetSceneIndex = 0;
 
-    bool doing = false;
+    public static bool doing = false;
 
     public void Dispose()
     {
@@ -32,15 +32,18 @@ public class EngineResetManager : Singleton<EngineResetManager>, IDisposable
         if (!BundleManager.Instance.CanDispose())
             yield return null;
 
-        SceneManager.sceneUnloaded += OnSceneUnloaded;
+        //SceneManager.sceneUnloaded += OnSceneUnloaded;    //这时候回调不可靠
 
         SceneManager.LoadScene(resetSceneIndex);
     }
 
-    private void OnSceneUnloaded(Scene current)
+    public static void TryDoReset()
     {
+        if (!doing)
+            return;
+
         //注销回调
-        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        //SceneManager.sceneUnloaded -= OnSceneUnloaded;
 
         //TODO: Object Pool, timer or something
 
