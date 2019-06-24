@@ -10,6 +10,7 @@
 * 使用XLua框架. 
 * 实现LuaManager. 实现LBehaviour, 作为Lua版的MonoBehavior.
 * 支持windows, mac, ios, andriod. Unity2018.4测试通过
+* 没有实现热更新功能, 这部分代码定制性强, 不适合框架提供方案.
 
 ## 快速开始
 点击菜单TJ/Build AssetBundles,  编译AssetBundle资源.   
