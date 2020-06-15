@@ -64,6 +64,10 @@ namespace TJ
             bundleName = AssetBundleUtils.ConvertToABName(name);
         }
 
+        public bool IsPrefab()
+        {
+            return assetPath.EndsWith(".prefab");
+        }
 
         /// <summary>
         /// 分析引用关系
@@ -89,6 +93,21 @@ namespace TJ
                 string path = AssetDatabase.GetAssetPath(o);
                 if (path.StartsWith("Resources"))
                     continue;
+                
+                //如果自身为预制件, 需要过滤一些情况
+                if (IsPrefab())
+                {
+                    //不包含预制件嵌套(包含和自己同一路径).  这是unity不完善的地方, 没办法, 从2018.3开始有这个问题
+                    //https://issuetracker.unity3d.com/issues/nestedprefabs-when-building-assetbundles-with-nested-prefab-assets-are-duplicated-in-parent-prefab-assetbundle
+                    //Prefabs are baked out during the build process so each prefab, nested or otherwise, is full and independent of each other.
+                    if (path.EndsWith(".prefab"))
+                        continue;
+
+                    //不包含asset
+                    //asset的格式和预制件一致. 在使用过程中, 发现会有与预制件嵌套类似的问题. 在使用spine, 会发现预制件和asset同时包含一张图片, 所以干脆过滤掉.
+                    if (path.EndsWith(".asset"))
+                        continue;
+                }
 
                 depList.Add(o);
             }
